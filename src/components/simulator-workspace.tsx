@@ -3,7 +3,7 @@
 import {
   AlertTriangle, BadgeEuro, BookOpenText, BriefcaseBusiness,
   BookMarked, Calculator, Check, ChevronDown, CircleHelp, FileCheck2, Landmark, Languages, LayoutDashboard,
-  MapPinned, Moon, ReceiptText, Scale, Send, ShieldCheck, Sun,
+  MapPinned, Moon, ReceiptText, Scale, Send, ShieldCheck, Sparkles, Sun, TrendingUp, WalletCards,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
@@ -223,9 +223,11 @@ export function SimulatorWorkspace() {
       <aside className="sidebar">
         <div className="brand-mark"><BrandLogo /></div>
         <nav aria-label={locale === "es" ? "Navegación principal" : "Main navigation"}>
-          {navItems.map(([label, Icon]) => (
-            <button type="button" aria-current={activeView === label ? "page" : undefined} className={activeView === label ? "nav-item active" : "nav-item"} key={label} onClick={() => setActiveView(label)}><Icon aria-hidden="true" size={18} /><span>{locale === "es" ? label : englishNav[label]}</span></button>
-          ))}
+          {navItems.map(([label, Icon], index) => <div className="nav-entry" key={label}>
+            {index === 0 ? <span className="nav-group-label">{locale === "es" ? "PLANIFICA" : "PLAN"}</span> : null}
+            {index === 4 ? <span className="nav-group-label">{locale === "es" ? "EXPLORA" : "EXPLORE"}</span> : null}
+            <button type="button" aria-current={activeView === label ? "page" : undefined} className={activeView === label ? "nav-item active" : "nav-item"} onClick={() => setActiveView(label)}><Icon aria-hidden="true" size={18} /><span>{locale === "es" ? label : englishNav[label]}</span></button>
+          </div>)}
         </nav>
         <div className="sidebar-foot">
           <div className="preference-controls" aria-label={locale === "es" ? "Preferencias" : "Preferences"}>
@@ -264,13 +266,14 @@ export function SimulatorWorkspace() {
           <span className="status-dot" /><strong>Base legal verificada</strong><span>IRPF general y bonificación RETA de Ceuta</span><span className="strip-divider" /><AlertTriangle aria-hidden="true" size={16} /><span>IPSI, cuota reducida y compatibilidades pendientes: no se estiman</span>
         </section>
 
+        <div className="dashboard-section-bar"><div><span>{locale === "es" ? "LECTURA RÁPIDA" : "AT A GLANCE"}</span><h2>{locale === "es" ? "Tu escenario, de más importante a más detallado" : "Your scenario, from most important to most detailed"}</h2></div><span className="live-indicator"><i />{locale === "es" ? "Se actualiza al editar" : "Updates as you edit"}</span></div>
         <section className="dashboard-kpis" aria-label="Resumen económico del escenario">
-          <article><small>Ingresos estimados</small><strong>{model.revenue ? formatEuro(model.revenue.value) : "—"}</strong><span>Facturación anual</span></article>
-          <article><small>Neto estimado</small><strong>{model.netAnnualIncome ? formatEuro(model.netAnnualIncome) : "—"}</strong><span>{model.netAnnualIncome ? `${formatEuro(euro(Math.round(model.netAnnualIncome.cents / 12)))} / mes` : "Neto mensual pendiente"}</span></article>
-          <article><small>Ahorro fiscal Ceuta</small><strong>{model.irpf ? formatEuro(model.irpf.ceutaGeneralDeduction) : "—"}</strong><span>Deducción IRPF recurrente</span></article>
-          <article><small>Ahorro Seguridad Social</small><strong>{model.contribution ? formatEuro(model.contribution.annualSaving) : "—"}</strong><span>Bonificación RETA 2026</span></article>
-          <article className="verification-kpi"><small>Ayuda extraordinaria</small><strong>5.000 €</strong><span>Potencial; faltan 2 verificaciones</span></article>
-          <article><small>Ahorro recurrente total</small><strong>{model.irpf && model.contribution ? formatEuro(euro(model.irpf.ceutaGeneralDeduction.cents + model.contribution.annualSaving.cents)) : "—"}</strong><span>No incluye ayudas de pago único</span></article>
+          <article className="kpi-featured kpi-net"><div className="kpi-icon"><WalletCards size={18} /></div><small>Neto anual estimado</small><strong>{model.netAnnualIncome ? formatEuro(model.netAnnualIncome) : "—"}</strong><span>{model.netAnnualIncome ? `${formatEuro(euro(Math.round(model.netAnnualIncome.cents / 12)))} / mes disponible` : "Neto mensual pendiente"}</span></article>
+          <article className="kpi-featured kpi-saving"><div className="kpi-icon"><TrendingUp size={18} /></div><small>Ahorro recurrente total</small><strong>{model.irpf && model.contribution ? formatEuro(euro(model.irpf.ceutaGeneralDeduction.cents + model.contribution.annualSaving.cents)) : "—"}</strong><span>Fiscal + Seguridad Social · anual<br />No incluye ayudas de pago único</span></article>
+          <article className="verification-kpi kpi-featured"><div className="kpi-icon"><Sparkles size={18} /></div><small>Ayuda extraordinaria</small><strong>5.000 €</strong><span>Potencial · faltan 2 verificaciones</span></article>
+          <article className="kpi-detail"><small>Ingresos estimados</small><strong>{model.revenue ? formatEuro(model.revenue.value) : "—"}</strong><span>Facturación anual</span></article>
+          <article className="kpi-detail"><small>Ahorro fiscal Ceuta</small><strong>{model.irpf ? formatEuro(model.irpf.ceutaGeneralDeduction) : "—"}</strong><span>Deducción IRPF recurrente</span></article>
+          <article className="kpi-detail"><small>Ahorro Seguridad Social</small><strong>{model.contribution ? formatEuro(model.contribution.annualSaving) : "—"}</strong><span>Bonificación RETA 2026</span></article>
         </section>
 
         <div className="work-grid">
