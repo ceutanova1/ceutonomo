@@ -258,7 +258,7 @@ export function SimulatorWorkspace() {
           </section>
         ) : <>
         <header className="workspace-header">
-          <div><p className="eyebrow">CEUTAUNOMO · {locale === "es" ? "DEMO PRIVADA" : "PRIVATE DEMO"}</p><h1>{locale === "es" ? "Tu actividad en Ceuta, explicada euro a euro." : "Your Ceuta business, explained euro by euro."}</h1><p className="lede">{locale === "es" ? "Simula. Decide. Emprende con claridad. Solo mostramos como ahorro lo que puede trazarse a una regla oficial." : "Simulate. Decide. Start with clarity. We only show savings that can be traced to an official rule."}</p></div>
+          <div><p className="eyebrow">CEUTONOMO · {locale === "es" ? "DEMO PRIVADA" : "PRIVATE DEMO"}</p><h1>{locale === "es" ? "Tu actividad en Ceuta, explicada euro a euro." : "Your Ceuta business, explained euro by euro."}</h1><p className="lede">{locale === "es" ? "Simula. Decide. Emprende con claridad. Solo mostramos como ahorro lo que puede trazarse a una regla oficial." : "Simulate. Decide. Start with clarity. We only show savings that can be traced to an official rule."}</p></div>
           <div className="header-actions"><span className="year-pill">{locale === "es" ? "Ejercicio" : "Tax year"} 2026</span><button type="button" className="secondary-button save-button" onClick={saveScenario}>{savedAt ? <Check size={15} /> : null}{savedAt ? (locale === "es" ? "Escenario guardado" : "Scenario saved") : (locale === "es" ? "Guardar en este dispositivo" : "Save on this device")}</button></div>
         </header>
 
