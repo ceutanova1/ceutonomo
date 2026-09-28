@@ -1,0 +1,69 @@
+[
+  {
+    "id": "PROCESA-AUTOEMPLEO-2026-CALL",
+    "taxYear": 2026,
+    "version": "0.1.0",
+    "status": "NEEDS_VERIFICATION",
+    "effectiveFrom": "2026-01-01",
+    "effectiveUntil": null,
+    "sourceIds": ["PROCESA-AUTOEMPLEO-CATALOG"],
+    "parameters": {
+      "activeWindowVerified": false,
+      "calculationEnabled": false
+    },
+    "assumptions": [
+      "No se muestra importe ni plazo hasta verificar una convocatoria oficial de 2026.",
+      "Debe comprobarse si la solicitud precede al alta, la inversión o el inicio de actividad."
+    ]
+  },
+  {
+    "id": "PROCESA-CONTRATACION-INDEFINIDA-2026",
+    "taxYear": 2026,
+    "version": "1.0.0",
+    "status": "PUBLISHED",
+    "effectiveFrom": "2026-06-01",
+    "effectiveUntil": "2026-12-30",
+    "sourceIds": ["PROCESA-CONTRATACION-INDEFINIDA-2026", "BOCCE-6608-CONTRATACION-INDEFINIDA-2026"],
+    "parameters": {
+      "fifthWindowClosesAt": "2026-09-30T13:00:00+02:00",
+      "sixthWindowOpensAt": "2026-10-01T00:00:00+02:00",
+      "sixthWindowClosesAt": "2026-12-30T13:00:00+01:00",
+      "windowBudgetEuro": 200000,
+      "minimumFullTimeAmountEuro": 7350,
+      "maximumFullTimeBaseAmountEuro": 10265,
+      "possibleNonConcurrentIncrementEuro": 500,
+      "partTimeFactor": 0.5,
+      "minimumWeeklyHours": 20,
+      "maintenanceYears": 3,
+      "hireMustFollowApplication": true
+    },
+    "assumptions": [
+      "La cuantía exacta depende del grupo de cotización, jornada y posible incremento no concurrente.",
+      "La concesión es por concurrencia competitiva y está limitada por crédito y puntuación.",
+      "La persona contratada debe pertenecer a un colectivo subvencionable y estar inscrita como demandante de empleo en Ceuta."
+    ]
+  },
+  {
+    "id": "AEAT-CEUTA-AYUDA-DIRECTA-2026",
+    "taxYear": 2026,
+    "version": "1.0.0",
+    "status": "PUBLISHED",
+    "effectiveFrom": "2026-09-03",
+    "effectiveUntil": "2026-11-30",
+    "sourceIds": ["RDL-22-2026-ART-1", "AEAT-GC70-CEUTA-2026"],
+    "parameters": {
+      "individualAmountEuro": 5000,
+      "companyFirstBracketAmountEuro": 10000,
+      "companySecondBracketAmountEuro": 20000,
+      "companyThirdBracketAmountEuro": 40000,
+      "companyFourthBracketAmountEuro": 80000,
+      "companyFifthBracketAmountEuro": 150000,
+      "applicationDeadline": "2026-11-30",
+      "taxExempt": true
+    },
+    "assumptions": [
+      "El importe de 10.000 euros para persona jurídica corresponde al primer tramo de volumen de operaciones; los tramos superiores requieren facturación verificada.",
+      "La afectación negativa por la crisis migratoria no se presume y debe declararse."
+    ]
+  }
+]

@@ -1,0 +1,543 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  REVIEWER
+  ADMIN
+}
+
+enum BusinessStructure {
+  AUTONOMO
+  SL
+  SLU
+  UNDECIDED
+}
+
+enum BusinessStatus {
+  PLANNED
+  NEW
+  EXISTING
+}
+
+enum ExpenseFrequency {
+  MONTHLY
+  ANNUAL
+  ONE_TIME
+}
+
+enum ScenarioStatus {
+  DRAFT
+  CALCULATED
+  ARCHIVED
+}
+
+enum RuleSetStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  RETIRED
+}
+
+enum BenefitCategory {
+  TAX
+  SOCIAL_SECURITY
+  GRANT
+}
+
+enum RuleConfidence {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum EligibilityStatus {
+  ELIGIBLE
+  POTENTIALLY_ELIGIBLE
+  NOT_ELIGIBLE
+  NEEDS_VERIFICATION
+}
+
+enum GrantWindowStatus {
+  UPCOMING
+  OPEN
+  CLOSED
+  SUSPENDED
+  NEEDS_VERIFICATION
+}
+
+enum GrantApplicationStatus {
+  NOT_STARTED
+  PREPARING
+  SUBMITTED
+  AWARDED
+  REJECTED
+  WITHDRAWN
+}
+
+enum RoadmapStepStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+model User {
+  id                String            @id @default(uuid())
+  email             String?           @unique
+  emailVerifiedAt   DateTime?
+  locale            String            @default("es")
+  role              UserRole          @default(USER)
+  businessProfiles  BusinessProfile[]
+  scenarios         SimulationScenario[]
+  reviewedRuleSets  RuleSet[]         @relation("RuleSetReviewer")
+  publishedRuleSets RuleSet[]         @relation("RuleSetPublisher")
+  auditEvents       RuleAuditLog[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+model BusinessProfile {
+  id                  String               @id @default(uuid())
+  userId              String?
+  user                User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                String?
+  structure           BusinessStructure    @default(UNDECIDED)
+  status              BusinessStatus       @default(PLANNED)
+  taxProfile          TaxProfile?
+  activities          Activity[]
+  clientDistribution  ClientDistribution?
+  expenses            Expense[]
+  scenarios           SimulationScenario[]
+  roadmaps            Roadmap[]
+  grantApplications   GrantApplication[]
+  version             Int                  @default(1)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  @@index([userId, updatedAt])
+}
+
+model TaxProfile {
+  id                         String          @id @default(uuid())
+  businessProfileId          String          @unique
+  businessProfile            BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  age                        Int?
+  taxResidenceCountry        String?
+  residentInCeuta            Boolean?
+  ceutaResidenceStartedAt    DateTime?       @db.Date
+  registeredInCeuta          Boolean?
+  firstTimeAutonomo          Boolean?
+  previouslyRegisteredReta   Boolean?
+  previousRetaEndedAt        DateTime?       @db.Date
+  currentlyUnemployed        Boolean?
+  registeredJobSeeker        Boolean?
+  subsidyCircumstances       Json?
+  createdAt                  DateTime        @default(now())
+  updatedAt                  DateTime        @updatedAt
+}
+
+model Activity {
+  id                     String          @id @default(uuid())
+  businessProfileId      String
+  businessProfile        BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  preset                 String
+  description            String?
+  cnaeCode               String?
+  iaeCode                String?
+  estimatedStartDate     DateTime?       @db.Date
+  physicalEstablishment  Boolean?
+  establishmentLocation  String?
+  workPerformedInCeuta   Boolean?
+  workLocation           String?
+  officeModel            String?
+  employeeCount          Int             @default(0)
+  plannedEmployeeCount   Int             @default(0)
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+
+  @@index([businessProfileId])
+  @@index([cnaeCode])
+}
+
+model ClientDistribution {
+  id                 String          @id @default(uuid())
+  businessProfileId  String          @unique
+  businessProfile    BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  mainlandSpainBps   Int             @default(0)
+  ceutaBps           Int             @default(0)
+  euBusinessBps      Int             @default(0)
+  euConsumerBps      Int             @default(0)
+  nonEuBps           Int             @default(0)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+}
+
+model Expense {
+  id                  String           @id @default(uuid())
+  businessProfileId   String
+  businessProfile     BusinessProfile  @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  category            String
+  label               String
+  amountCents         BigInt
+  currency            String           @default("EUR")
+  frequency           ExpenseFrequency
+  deductibleBps       Int
+  taxTreatment        String?
+  notes               String?
+  evidenceStatus      String?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  @@index([businessProfileId, category])
+}
+
+model SimulationScenario {
+  id                  String             @id @default(uuid())
+  userId              String?
+  user                User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessProfileId   String?
+  businessProfile     BusinessProfile?   @relation(fields: [businessProfileId], references: [id], onDelete: SetNull)
+  clonedFromId        String?
+  clonedFrom          SimulationScenario? @relation("ScenarioClone", fields: [clonedFromId], references: [id], onDelete: SetNull)
+  clones              SimulationScenario[] @relation("ScenarioClone")
+  ruleSetId           String
+  ruleSet             RuleSet            @relation(fields: [ruleSetId], references: [id], onDelete: Restrict)
+  name                String
+  taxYear             Int
+  structure           BusinessStructure
+  status              ScenarioStatus     @default(DRAFT)
+  inputSnapshot       Json
+  years               SimulationYear[]
+  results             SimulationResult[]
+  eligibilityResults  EligibilityEvaluation[]
+  version             Int                @default(1)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@index([userId, updatedAt])
+  @@index([businessProfileId, updatedAt])
+  @@index([ruleSetId])
+}
+
+model SimulationYear {
+  id             String             @id @default(uuid())
+  scenarioId     String
+  scenario       SimulationScenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  yearIndex      Int
+  calendarYear   Int
+  inputSnapshot  Json
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@unique([scenarioId, yearIndex])
+}
+
+model SimulationResult {
+  id                         String             @id @default(uuid())
+  scenarioId                 String
+  scenario                   SimulationScenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  yearIndex                  Int
+  revenueCents               BigInt
+  deductibleExpensesCents    BigInt
+  taxLiabilityCents          BigInt
+  taxSavingCents             BigInt
+  contributionCents          BigInt
+  contributionSavingCents    BigInt
+  potentialGrantCents        BigInt
+  cashFlowCents              BigInt
+  netIncomeCents             BigInt
+  retainedCapitalCents       BigInt
+  calculationTrace           Json
+  assumptions                Json
+  warnings                   Json
+  fingerprint                String
+  calculatedAt               DateTime           @default(now())
+
+  @@unique([scenarioId, yearIndex, fingerprint])
+  @@index([scenarioId, calculatedAt])
+}
+
+model RuleSet {
+  id                  String                   @id @default(uuid())
+  taxYear             Int
+  semanticVersion     String
+  schemaVersion       String
+  status              RuleSetStatus            @default(DRAFT)
+  effectiveFrom       DateTime                 @db.Date
+  effectiveUntil      DateTime?                @db.Date
+  checksum            String
+  reviewerId          String?
+  reviewer            User?                    @relation("RuleSetReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  publisherId         String?
+  publisher           User?                    @relation("RuleSetPublisher", fields: [publisherId], references: [id], onDelete: SetNull)
+  publishedAt         DateTime?
+  benefitRules        BenefitRuleVersion[]
+  taxRules            TaxRuleVersion[]
+  socialSecurityRules SocialSecurityRuleVersion[]
+  ipsiRules           IpsiRuleVersion[]
+  scenarios           SimulationScenario[]
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @updatedAt
+
+  @@unique([taxYear, semanticVersion])
+  @@unique([checksum])
+  @@index([taxYear, status])
+}
+
+model Benefit {
+  id                String               @id
+  officialName      String
+  description       String
+  category          BenefitCategory
+  jurisdiction      String
+  administration    String
+  ruleVersions      BenefitRuleVersion[]
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+}
+
+model BenefitRuleVersion {
+  id                            String         @id @default(uuid())
+  benefitId                     String
+  benefit                       Benefit        @relation(fields: [benefitId], references: [id], onDelete: Restrict)
+  ruleSetId                     String
+  ruleSet                       RuleSet        @relation(fields: [ruleSetId], references: [id], onDelete: Restrict)
+  version                       String
+  legalBasis                    String
+  eligibilityExpression         Json
+  incompatibleBenefitIds        String[]
+  compatibleBenefitIds          String[]
+  calculationDefinition         Json
+  applicationStartsAt           DateTime?      @db.Date
+  applicationEndsAt             DateTime?      @db.Date
+  applyBeforeStartingActivity    Boolean?
+  investBeforeApplicationAllowed Boolean?
+  requiredDocuments             Json
+  confidence                    RuleConfidence
+  lastVerifiedAt                DateTime
+  createdAt                     DateTime       @default(now())
+
+  @@unique([benefitId, ruleSetId, version])
+  @@index([ruleSetId])
+}
+
+model TaxRuleVersion {
+  id                    String    @id @default(uuid())
+  stableRuleId          String
+  ruleSetId             String
+  ruleSet               RuleSet   @relation(fields: [ruleSetId], references: [id], onDelete: Restrict)
+  version               String
+  jurisdiction          String
+  legalBasis            String
+  parameters            Json
+  calculationDefinition Json
+  lastVerifiedAt        DateTime
+  createdAt             DateTime  @default(now())
+
+  @@unique([stableRuleId, ruleSetId, version])
+  @@index([ruleSetId])
+}
+
+model SocialSecurityRuleVersion {
+  id                    String    @id @default(uuid())
+  stableRuleId          String
+  ruleSetId             String
+  ruleSet               RuleSet   @relation(fields: [ruleSetId], references: [id], onDelete: Restrict)
+  version               String
+  legalBasis            String
+  parameters            Json
+  eligibilityExpression Json
+  calculationDefinition Json
+  compatibilityRules    Json
+  lastVerifiedAt        DateTime
+  createdAt             DateTime  @default(now())
+
+  @@unique([stableRuleId, ruleSetId, version])
+  @@index([ruleSetId])
+}
+
+model IpsiRuleVersion {
+  id                    String    @id @default(uuid())
+  stableRuleId          String
+  ruleSetId             String
+  ruleSet               RuleSet   @relation(fields: [ruleSetId], references: [id], onDelete: Restrict)
+  version               String
+  legalBasis            String
+  parameters            Json
+  classificationRules   Json
+  calculationDefinition Json
+  lastVerifiedAt        DateTime
+  createdAt             DateTime  @default(now())
+
+  @@unique([stableRuleId, ruleSetId, version])
+  @@index([ruleSetId])
+}
+
+model LegalSource {
+  id              String            @id
+  title           String
+  issuer          String
+  url             String
+  legalReference  String
+  publicationDate DateTime?         @db.Date
+  effectiveFrom   DateTime?         @db.Date
+  effectiveUntil  DateTime?         @db.Date
+  retrievedAt     DateTime
+  lastVerifiedAt  DateTime
+  checksum        String?
+  notes           String?
+  citations       RuleSourceCitation[]
+  grantPrograms   GrantProgram[]
+  grantWindows    GrantWindow[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model RuleSourceCitation {
+  id              String      @id @default(uuid())
+  legalSourceId   String
+  legalSource     LegalSource @relation(fields: [legalSourceId], references: [id], onDelete: Restrict)
+  ruleType        String
+  stableRuleId    String
+  ruleVersion     String
+  preciseLocator  String
+  purpose         String
+  createdAt       DateTime    @default(now())
+
+  @@unique([legalSourceId, ruleType, stableRuleId, ruleVersion, preciseLocator])
+  @@index([ruleType, stableRuleId, ruleVersion])
+}
+
+model EligibilityEvaluation {
+  id               String             @id @default(uuid())
+  scenarioId       String
+  scenario         SimulationScenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  benefitId        String
+  stableRuleId     String
+  ruleVersion      String
+  status           EligibilityStatus
+  reasonCodes      String[]
+  missingFacts     Json
+  warnings         Json
+  evaluatedAt      DateTime           @default(now())
+
+  @@index([scenarioId, status])
+  @@index([stableRuleId, ruleVersion])
+}
+
+model GrantProgram {
+  id                   String             @id
+  officialName         String
+  description          String
+  administration       String
+  legalSourceId        String
+  legalSource          LegalSource        @relation(fields: [legalSourceId], references: [id], onDelete: Restrict)
+  windows              GrantWindow[]
+  applications         GrantApplication[]
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+}
+
+model GrantWindow {
+  id                              String            @id @default(uuid())
+  grantProgramId                  String
+  grantProgram                    GrantProgram      @relation(fields: [grantProgramId], references: [id], onDelete: Cascade)
+  legalSourceId                   String
+  legalSource                     LegalSource       @relation(fields: [legalSourceId], references: [id], onDelete: Restrict)
+  status                          GrantWindowStatus
+  applicationStartsAt             DateTime?         @db.Date
+  applicationEndsAt               DateTime?         @db.Date
+  eligibleActionStartsAt          DateTime?         @db.Date
+  eligibleActionEndsAt            DateTime?         @db.Date
+  amountDefinition                Json
+  eligibilityExpression           Json
+  applyBeforeStartingActivity      Boolean?
+  investBeforeApplicationAllowed   Boolean?
+  minimumMaintenanceMonths         Int?
+  incompatibilityRules             Json
+  requiredDocuments                Json
+  lastVerifiedAt                   DateTime
+  createdAt                        DateTime          @default(now())
+  updatedAt                        DateTime          @updatedAt
+
+  @@index([grantProgramId, status])
+  @@index([applicationStartsAt, applicationEndsAt])
+}
+
+model GrantApplication {
+  id                  String                 @id @default(uuid())
+  businessProfileId   String
+  businessProfile     BusinessProfile        @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  grantProgramId      String
+  grantProgram        GrantProgram           @relation(fields: [grantProgramId], references: [id], onDelete: Restrict)
+  status              GrantApplicationStatus @default(NOT_STARTED)
+  submittedAt         DateTime?
+  decisionAt          DateTime?
+  awardedAmountCents  BigInt?
+  notes               String?
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+
+  @@index([businessProfileId, status])
+  @@index([grantProgramId])
+}
+
+model Roadmap {
+  id                  String          @id @default(uuid())
+  businessProfileId   String
+  businessProfile     BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  taxYear             Int
+  generatedFrom       Json
+  steps               RoadmapStep[]
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  @@index([businessProfileId, updatedAt])
+}
+
+model RoadmapStep {
+  id                    String            @id @default(uuid())
+  roadmapId             String
+  roadmap               Roadmap           @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  position              Int
+  title                 String
+  explanation           String
+  status                RoadmapStepStatus @default(TODO)
+  deadline              DateTime?         @db.Date
+  responsibleAuthority  String?
+  officialUrl            String?
+  requiredDocuments     Json
+  warning               String?
+  sourceRuleId          String?
+  sourceRuleVersion     String?
+  completedAt           DateTime?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@unique([roadmapId, position])
+  @@index([roadmapId, status])
+}
+
+model RuleAuditLog {
+  id           String   @id @default(uuid())
+  actorId      String?
+  actor        User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action       String
+  entityType   String
+  entityId     String
+  beforeHash   String?
+  afterHash    String?
+  rationale    String
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  @@index([entityType, entityId, createdAt])
+  @@index([actorId, createdAt])
+}

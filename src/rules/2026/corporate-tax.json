@@ -1,0 +1,23 @@
+[
+  {
+    "id": "IS-MICROEMPRESA-CEUTA-2026-v1",
+    "taxYear": 2026,
+    "version": "1.0.0",
+    "status": "PUBLISHED",
+    "effectiveFrom": "2026-01-01",
+    "effectiveUntil": "2026-12-31",
+    "sourceIds": ["AEAT-IS-TIPOS-2026", "AEAT-IS-CEUTA-RDL22-2026"],
+    "parameters": {
+      "microFirstThresholdEuro": 50000,
+      "microFirstRateBasisPoints": 1900,
+      "microExcessRateBasisPoints": 2100,
+      "newCompanyRateBasisPoints": 1500,
+      "ceutaBonusBasisPoints": 6000
+    },
+    "assumptions": [
+      "La escala de microempresa exige INCN del período anterior inferior a un millón de euros y no ser entidad patrimonial.",
+      "El 15% de nueva creación solo se aplica al primer período positivo y al siguiente cuando se cumplen las condiciones legales.",
+      "La bonificación se aplica únicamente a la cuota atribuible a rentas obtenidas en Ceuta por una entidad que opere efectiva y materialmente allí."
+    ]
+  }
+]

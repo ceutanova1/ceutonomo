@@ -1,0 +1,30 @@
+[
+  {
+    "id": "IRPF-CEUTA-68.4-2026-v1",
+    "taxYear": 2026,
+    "version": "1.0.0",
+    "status": "PUBLISHED",
+    "effectiveFrom": "2026-01-01",
+    "effectiveUntil": null,
+    "sourceIds": [
+      "BOE-LIRPF-35-2006-ART-56-57",
+      "BOE-LIRPF-35-2006-ART-63-65",
+      "BOE-LIRPF-35-2006-68-4",
+      "AEAT-IRPF-2025-CEUTA-WORKED-EXAMPLE"
+    ],
+    "parameters": {
+      "deductionBasisPoints": 6000,
+      "calculationType": "ATTRIBUTABLE_GROSS_QUOTA_DEDUCTION",
+      "generalScaleConfiguration": "src/rules/2026/irpf.ts",
+      "taxpayerMinimumCents": 555000,
+      "over65IncreaseCents": 115000,
+      "over75AdditionalIncreaseCents": 140000
+    },
+    "assumptions": [
+      "La deducción se aplica a la cuota atribuible a rentas calificadas, no al tipo marginal.",
+      "La residencia y la fuente de cada renta se evalúan por separado.",
+      "El cálculo publicado en esta versión cubre la base general, el mínimo del contribuyente y la deducción Ceuta; otras circunstancias personales se incorporan como mínimo adicional explícito.",
+      "La base del ahorro y otras deducciones no están incluidas en el resultado general del MVP."
+    ]
+  }
+]

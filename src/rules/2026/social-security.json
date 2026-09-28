@@ -1,0 +1,69 @@
+[
+  {
+    "id": "SS-CEUTA-AUTONOMO-2026-v1",
+    "taxYear": 2026,
+    "version": "1.0.0",
+    "status": "PUBLISHED",
+    "effectiveFrom": "2026-01-01",
+    "effectiveUntil": "2026-09-30",
+    "sourceIds": ["TGSS-BONIFICACION-CEUTA-AUTONOMOS"],
+    "parameters": {
+      "bonusBasisPoints": 5000,
+      "appliesTo": "COMMON_CONTINGENCIES_COMPONENT",
+      "requiresResidenceInCeuta": true,
+      "requiresActivityInCeuta": true
+    },
+    "assumptions": [
+      "El sector debe estar incluido en la relación oficial.",
+      "No se presupone compatibilidad con cuota reducida u otros incentivos.",
+      "La bonificación no se aplica automáticamente a toda la cuota."
+    ]
+  },
+  {
+    "id": "SS-CEUTA-AUTONOMO-2026-v2",
+    "taxYear": 2026,
+    "version": "2.0.0",
+    "status": "PUBLISHED",
+    "effectiveFrom": "2026-10-01",
+    "effectiveUntil": null,
+    "sourceIds": ["BOE-RDL-22-2026-ART-36"],
+    "parameters": {
+      "bonusBasisPoints": 7500,
+      "appliesTo": "COMMON_CONTINGENCIES_COMPONENT",
+      "requiresResidenceInCeuta": true,
+      "requiresActivityInCeuta": true
+    },
+    "assumptions": [
+      "Produce efectos respecto de cuotas devengadas desde el 1 de octubre de 2026.",
+      "El sector debe estar incluido en la relación legal.",
+      "La compatibilidad con la cuota reducida debe evaluarse por separado."
+    ]
+  },
+  {
+    "id": "RETA-CONTRIBUTION-2026-v1",
+    "taxYear": 2026,
+    "version": "1.0.0",
+    "status": "PUBLISHED",
+    "effectiveFrom": "2026-01-01",
+    "effectiveUntil": "2026-12-31",
+    "sourceIds": [
+      "BOE-ORDER-PJC-297-2026-ART-18",
+      "LGSS-ART-308-2026"
+    ],
+    "parameters": {
+      "commonContingenciesBasisPoints": 2830,
+      "professionalContingenciesBasisPoints": 130,
+      "cessationOfActivityBasisPoints": 90,
+      "professionalTrainingBasisPoints": 10,
+      "intergenerationalEquityBasisPoints": 90,
+      "genericExpenseBasisPoints": 700,
+      "societaryGenericExpenseBasisPoints": 300,
+      "bracketConfiguration": "src/rules/2026/reta.ts"
+    },
+    "assumptions": [
+      "La base mínima del tramo se usa como valor inicial editable.",
+      "Las cuotas se redondean por componente al céntimo.",
+      "La cuota reducida no se aplica sin una regla 2026 verificada por separado."
+    ]
+  }
+]
