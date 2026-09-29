@@ -66,3 +66,28 @@ test("language, theme and ebook roadmap preferences are available", async ({ pag
   await expect(page.getByRole("heading", { name: "From simulation to a guide you can keep." })).toBeVisible();
   await expect(page.getByText("Payment and download will only be enabled in the final phase.")).toBeVisible();
 });
+
+test("phase one views are functional and share eligibility state", async ({ page }) => {
+  await openReadyApp(page);
+  const cookieButton = page.getByRole("button", { name: "Solo esenciales" });
+  if (await cookieButton.isVisible()) await cookieButton.click();
+
+  await page.getByRole("button", { name: "Elegibilidad" }).click();
+  await expect(page.getByRole("heading", { name: "Primero los hechos. Después, los beneficios." })).toBeVisible();
+  await page.getByRole("group", { name: "¿Resides efectivamente en Ceuta?" }).getByRole("button", { name: "No" }).click();
+
+  await page.getByRole("button", { name: "Beneficios" }).click();
+  await expect(page.getByRole("heading", { name: "Solo ventajas que pueden explicarse y acreditarse." })).toBeVisible();
+  await expect(page.getByText("El perfil no declara residencia efectiva en Ceuta.").first()).toBeVisible();
+
+  await page.getByRole("button", { name: "Simulador" }).click();
+  await expect(page.getByRole("heading", { name: "Un escenario. Un único resultado en toda la aplicación." })).toBeVisible();
+  await expect(page.getByText(/Residencia en Ceuta: no/)).toBeVisible();
+
+  await page.getByRole("button", { name: "Ayudas" }).click();
+  await expect(page.getByRole("heading", { name: "Convocatorias, plazos y condiciones antes de actuar." })).toBeVisible();
+  await page.getByRole("button", { name: "Hoja de ruta" }).click();
+  await expect(page.getByRole("heading", { name: "Del escenario a una decisión documentada." })).toBeVisible();
+  await page.getByRole("button", { name: "Fuentes" }).click();
+  await expect(page.getByRole("heading", { name: "La trazabilidad forma parte del resultado." })).toBeVisible();
+});

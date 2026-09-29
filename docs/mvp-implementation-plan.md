@@ -36,10 +36,12 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Complete: 2026 Ceuta 10% difficult-to-justify expense with the 2,000 euro cap, explicit incompatibility control, and safe capital-asset handling that does not deduct purchase price as a current expense.
 - Complete: RDL 22/2026 extraordinary direct aid with individual and five legal-entity amount bands, AEAT deadline, tax exemption, and missing-fact evaluation.
 - Complete: dashboard separating net annual/monthly cash, recurring IRPF savings, recurring Social Security savings, and one-time potential aid. Unverified aid is never added to the recurring total.
+- Complete: connected Phase 1 navigation. Eligibility facts now share state with the economic simulator, benefit results, verified grants, personalized roadmap, and official-source register.
+- Complete: functional Simulador, Beneficios, Ayudas, Hoja de ruta, and Fuentes views on desktop and mobile; no Phase 1 navigation item remains a placeholder.
 - Partial: reduced-fee personal eligibility and request timing are modeled. The 2026 amount and compatibility/priority against the Ceuta bonus remain `NEEDS_VERIFICATION` because the official sources inspected do not publish those parameters.
 - Complete: dated fifth/sixth 2026 PROCESA indefinite-hiring windows, amount bands, apply-before-hire warning, source links, and current-window evaluation.
 - Pending: any additional individually verified PROCESA calls, full grant application workflow, and personalized roadmap. The autoemployment page remains limited to 2022 calls and is intentionally disabled for 2026.
-- Verified: 61 deterministic unit/regression tests, lint, production build, and six Playwright flows across desktop and mobile for the positive case, incompatible-reduction case, and incomplete eligibility case.
+- Verified: 63 deterministic unit/regression tests, lint, production build, and seven Playwright flows across desktop and mobile, including shared-state navigation through every Phase 1 view.
 - Security note: `npm audit --omit=dev` currently reports four high-severity advisories in Prisma 7.10 transitive tooling (`deepmerge-ts` and `mysql2`). The offered automatic fix downgrades Prisma to 6 and is therefore not applied without a planned migration. Recheck upstream before deployment and do not expose Prisma CLI tooling in the runtime image.
 - Pending before public production launch: CI wiring, formal accessibility audit, privacy/brand decisions, persistence/authentication, and independent fiscal reviewer approval.
 

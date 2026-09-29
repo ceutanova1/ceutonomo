@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 
 import { BrandLogo } from "@/components/brand-logo";
+import { PhaseOneViews } from "@/components/phase-one-views";
 import { StructureComparison } from "@/components/structure-comparison";
 import {
   ClientDistributionEditor, ExpenseEditor, seedClientSegments, seedExpenses,
@@ -16,6 +17,7 @@ import {
 } from "@/components/financial-inputs";
 import { evaluateCeutaAutonomoBonus } from "@/domain/eligibility/ceuta-autonomo-bonus";
 import { applyBasisPoints, euro, formatEuro, parseEuro, subtractMoney } from "@/domain/money";
+import { type BusinessProfileFacts, demoBusinessProfile } from "@/domain/profile";
 import { calculateRetaContribution } from "@/domain/social-security/reta";
 import { buildThreeYearRetaTimeline } from "@/domain/social-security/timeline";
 import { analyzeClientDistribution } from "@/domain/simulations/client-distribution";
@@ -72,6 +74,7 @@ export function SimulatorWorkspace() {
   const [interfaceReady, setInterfaceReady] = useState(false);
   const [locale, setLocale] = useState<Locale>("es");
   const [theme, setTheme] = useState<Theme>("light");
+  const [profile, setProfile] = useState<BusinessProfileFacts>(demoBusinessProfile);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -99,6 +102,7 @@ export function SimulatorWorkspace() {
         if (typeof scenario.worksInCeuta === "boolean") setWorksInCeuta(scenario.worksInCeuta);
         if (typeof scenario.simplifiedDirectEstimation === "boolean") setSimplifiedDirectEstimation(scenario.simplifiedDirectEstimation);
         if (typeof scenario.dependentWorkerReduction === "boolean") setDependentWorkerReduction(scenario.dependentWorkerReduction);
+        if (scenario.profile && typeof scenario.profile === "object") setProfile(scenario.profile as BusinessProfileFacts);
         if (typeof scenario.savedAt === "string") setSavedAt(scenario.savedAt);
       } catch {
         window.localStorage.removeItem(SCENARIO_STORAGE_KEY);
@@ -127,8 +131,17 @@ export function SimulatorWorkspace() {
       dailyRate, days, months, revenueMode, manualAnnualRevenue, expenses, clientSegments,
       qualifyingCeutaPercentage, taxpayerAge, resident, worksInCeuta,
       simplifiedDirectEstimation, dependentWorkerReduction, savedAt: timestamp,
+      profile,
     }));
     setSavedAt(timestamp);
+  };
+
+  const updateProfile = (nextProfile: BusinessProfileFacts) => {
+    setProfile(nextProfile);
+    if (typeof nextProfile.age === "number") setTaxpayerAge(String(nextProfile.age));
+    if (typeof nextProfile.residentInCeuta === "boolean") setResident(nextProfile.residentInCeuta);
+    if (typeof nextProfile.activityPerformedInCeuta === "boolean") setWorksInCeuta(nextProfile.activityPerformedInCeuta);
+    if (typeof nextProfile.qualifyingCeutaIncomePercentage === "number") setQualifyingCeutaPercentage(String(nextProfile.qualifyingCeutaIncomePercentage));
   };
 
   const bonus = evaluateCeutaAutonomoBonus({ residentInCeuta: resident, activityPerformedInCeuta: worksInCeuta, coveredSector: true });
@@ -242,9 +255,8 @@ export function SimulatorWorkspace() {
         <div className="mobile-preferences">
           <button type="button" onClick={() => changeLocale(locale === "es" ? "en" : "es")}><Languages size={15} /> {locale === "es" ? "EN" : "ES"}</button>
           <button type="button" aria-label={locale === "es" ? (theme === "light" ? "Tema oscuro" : "Tema claro") : (theme === "light" ? "Dark theme" : "Light theme")} onClick={() => changeTheme(theme === "light" ? "dark" : "light")}>{theme === "light" ? <Moon size={15} /> : <Sun size={15} />}</button>
-          <button type="button" onClick={() => setActiveView("Ebook")}><BookMarked size={15} /> Ebook</button>
         </div>
-        {activeView === "Elegibilidad" ? <EligibilityWorkspace /> : activeView === "Autónomo vs SL" ? <StructureComparison locale={locale} annualRevenueCents={model.revenue?.value.cents ?? 0} autonomoExpenseCents={model.expenses?.value.cents ?? 0} autonomoNetCents={model.netAnnualIncome?.cents ?? 0} /> : activeView === "Ebook" ? (
+        {activeView === "Elegibilidad" ? <EligibilityWorkspace profile={profile} onProfileChange={updateProfile} /> : activeView === "Autónomo vs SL" ? <StructureComparison locale={locale} annualRevenueCents={model.revenue?.value.cents ?? 0} autonomoExpenseCents={model.expenses?.value.cents ?? 0} autonomoNetCents={model.netAnnualIncome?.cents ?? 0} /> : activeView === "Simulador" || activeView === "Beneficios" || activeView === "Ayudas" || activeView === "Hoja de ruta" || activeView === "Fuentes" ? <PhaseOneViews view={activeView} profile={profile} annualRevenueCents={model.revenue?.value.cents ?? 0} annualNetCents={model.netAnnualIncome?.cents ?? 0} recurringSavingCents={model.irpf && model.contribution ? model.irpf.ceutaGeneralDeduction.cents + model.contribution.annualSaving.cents : 0} onNavigate={setActiveView} /> : activeView === "Ebook" ? (
           <section className="ebook-panel">
             <div className="ebook-cover"><BookMarked size={42} /><span>CEUTONOMO</span><strong>{locale === "es" ? "Guía práctica para emprender en Ceuta" : "A practical guide to starting a business in Ceuta"}</strong><small>EDICIÓN 2026</small></div>
             <div className="ebook-copy"><p className="eyebrow">{locale === "es" ? "FASE FINAL · PRODUCTO DIGITAL" : "FINAL PHASE · DIGITAL PRODUCT"}</p><h1>{locale === "es" ? "De la simulación a una guía que puedas conservar." : "From simulation to a guide you can keep."}</h1><p>{locale === "es" ? "El ebook reunirá el método, ejemplos, listas de comprobación y fuentes verificadas de CEUTONOMO. Se ofrecerá como compra independiente para quien necesite una guía más profunda." : "The ebook will bring together CEUTONOMO’s method, examples, checklists and verified sources. It will be sold separately for people who need a deeper guide."}</p><ul><li>{locale === "es" ? "Versión española primero; edición inglesa después." : "Spanish edition first; English edition afterwards."}</li><li>{locale === "es" ? "Actualización y fecha de vigencia visibles." : "Visible update and validity dates."}</li><li>{locale === "es" ? "Pago y descarga se activarán solo en la fase final." : "Payment and download will only be enabled in the final phase."}</li></ul><span className="coming-soon">{locale === "es" ? "Próximamente" : "Coming soon"}</span></div>
@@ -289,14 +301,14 @@ export function SimulatorWorkspace() {
                 <label>Días / mes<input aria-label="Días facturables al mes" inputMode="numeric" value={days} onChange={(event) => setDays(event.target.value)} /></label>
                 <label>Meses trabajados<input aria-label="Meses trabajados" inputMode="numeric" value={months} onChange={(event) => setMonths(event.target.value)} /></label>
               </> : <label>Ingresos anuales<span className="money-input"><b>€</b><input aria-label="Ingresos anuales manuales" inputMode="decimal" value={manualAnnualRevenue} onChange={(event) => setManualAnnualRevenue(event.target.value)} /></span></label>}
-              <label>Edad<input aria-label="Edad del contribuyente" inputMode="numeric" value={taxpayerAge} onChange={(event) => setTaxpayerAge(event.target.value)} /></label>
+                <label>Edad<input aria-label="Edad del contribuyente" inputMode="numeric" value={taxpayerAge} onChange={(event) => { setTaxpayerAge(event.target.value); setProfile((current) => ({ ...current, age: parseInteger(event.target.value, 35) })); }} /></label>
             </div>
             <ExpenseEditor expenses={expenses} onChange={setExpenses} />
-            <label className="range-field"><span>Renta general calificable en Ceuta <b>{qualifyingCeutaPercentage}%</b></span><input aria-label="Porcentaje de renta calificable en Ceuta" type="range" min="0" max="100" step="5" value={qualifyingCeutaPercentage} onChange={(event) => setQualifyingCeutaPercentage(event.target.value)} /><small>Vivir en Ceuta no convierte automáticamente toda la renta en renta obtenida en Ceuta.</small></label>
+            <label className="range-field"><span>Renta general calificable en Ceuta <b>{qualifyingCeutaPercentage}%</b></span><input aria-label="Porcentaje de renta calificable en Ceuta" type="range" min="0" max="100" step="5" value={qualifyingCeutaPercentage} onChange={(event) => { setQualifyingCeutaPercentage(event.target.value); setProfile((current) => ({ ...current, qualifyingCeutaIncomePercentage: Number(event.target.value) })); }} /><small>Vivir en Ceuta no convierte automáticamente toda la renta en renta obtenida en Ceuta.</small></label>
             <ClientDistributionEditor segments={clientSegments} onChange={setClientSegments} totalPercentage={clientDistribution.totalBasisPoints / 100} />
             <div className="fact-checks">
-              <label><input type="checkbox" checked={resident} onChange={(event) => setResident(event.target.checked)} /><span><b>Resido efectivamente en Ceuta</b><small>La residencia no califica por sí sola todos los ingresos.</small></span></label>
-              <label><input type="checkbox" checked={worksInCeuta} onChange={(event) => setWorksInCeuta(event.target.checked)} /><span><b>Realizo la actividad desde Ceuta</b><small>Debe poder acreditarse con hechos y medios reales.</small></span></label>
+              <label><input type="checkbox" checked={resident} onChange={(event) => { setResident(event.target.checked); setProfile((current) => ({ ...current, residentInCeuta: event.target.checked })); }} /><span><b>Resido efectivamente en Ceuta</b><small>La residencia no califica por sí sola todos los ingresos.</small></span></label>
+              <label><input type="checkbox" checked={worksInCeuta} onChange={(event) => { setWorksInCeuta(event.target.checked); setProfile((current) => ({ ...current, activityPerformedInCeuta: event.target.checked })); }} /><span><b>Realizo la actividad desde Ceuta</b><small>Debe poder acreditarse con hechos y medios reales.</small></span></label>
               <label><input type="checkbox" checked={simplifiedDirectEstimation} onChange={(event) => setSimplifiedDirectEstimation(event.target.checked)} /><span><b>Tributo en estimación directa simplificada</b><small>Activa el gasto extraordinario de difícil justificación de 2026 si la actividad califica.</small></span></label>
               <label><input type="checkbox" checked={dependentWorkerReduction} onChange={(event) => setDependentWorkerReduction(event.target.checked)} /><span><b>Aplico la reducción incompatible de autónomo dependiente / cliente único</b><small>Si se aplica, no se acumula el gasto de difícil justificación.</small></span></label>
             </div>

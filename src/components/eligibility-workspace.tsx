@@ -7,7 +7,7 @@ import { evaluateBenefitRules } from "@/domain/eligibility/benefit-engine";
 import { evaluateReducedFee2026 } from "@/domain/eligibility/reduced-fee";
 import { evaluateCeutaExtraordinaryAid2026 } from "@/domain/grants/ceuta-extraordinary-aid";
 import { evaluateHiringGrant } from "@/domain/grants/grant-program";
-import { type BusinessProfileFacts, demoBusinessProfile } from "@/domain/profile";
+import { type BusinessProfileFacts } from "@/domain/profile";
 import { benefitRules2026 } from "@/rules/2026/benefits";
 import { procesaIndefiniteHiring2026 } from "@/rules/2026/grant-programs";
 import { ceutaExtraordinaryAid2026Rules } from "@/rules/2026/direct-aid";
@@ -59,16 +59,20 @@ function BooleanChoice({ label, help, value, onChange }: BooleanChoiceProps) {
   );
 }
 
-export function EligibilityWorkspace() {
+type EligibilityWorkspaceProps = Readonly<{
+  profile: BusinessProfileFacts;
+  onProfileChange: (profile: BusinessProfileFacts) => void;
+}>;
+
+export function EligibilityWorkspace({ profile, onProfileChange }: EligibilityWorkspaceProps) {
   const [step, setStep] = useState(0);
-  const [profile, setProfile] = useState<BusinessProfileFacts>(demoBusinessProfile);
   const results = useMemo(() => evaluateBenefitRules(benefitRules2026, profile), [profile]);
   const reducedFee = useMemo(() => evaluateReducedFee2026({ firstTimeAutonomo: profile.firstTimeAutonomo, previousAutonomoEndDate: profile.previousAutonomoEndDate, previouslyUsedReducedFee: profile.previouslyUsedReducedFee, plannedStartDate: profile.estimatedStartDate }), [profile.firstTimeAutonomo, profile.previousAutonomoEndDate, profile.previouslyUsedReducedFee, profile.estimatedStartDate]);
   const directAid = useMemo(() => evaluateCeutaExtraordinaryAid2026(profile, ceutaExtraordinaryAid2026Rules), [profile]);
   const grant = useMemo(() => evaluateHiringGrant(procesaIndefiniteHiring2026, profile, new Date()), [profile]);
   const statusCounts = useMemo(() => [...results, reducedFee, directAid, grant].reduce((counts, item) => ({ ...counts, [item.status]: counts[item.status] + 1 }), { ELIGIBLE: 0, POTENTIALLY_ELIGIBLE: 0, NOT_ELIGIBLE: 0, NEEDS_VERIFICATION: 0 }), [results, reducedFee, directAid, grant]);
   const update = <K extends keyof BusinessProfileFacts>(key: K, value: BusinessProfileFacts[K]) => {
-    setProfile((current) => ({ ...current, [key]: value }));
+    onProfileChange({ ...profile, [key]: value });
   };
 
   return (
@@ -107,7 +111,6 @@ export function EligibilityWorkspace() {
                   <label>Fecha de la última baja en RETA<input type="date" value={profile.previousAutonomoEndDate ?? ""} onChange={(event) => update("previousAutonomoEndDate", event.target.value)} /></label>
                   <BooleanChoice label="¿Disfrutaste antes de una cuota reducida?" value={profile.previouslyUsedReducedFee} onChange={(value) => update("previouslyUsedReducedFee", value)} />
                 </> : null}
-                <BooleanChoice label="¿Estás actualmente desempleado/a?" value={profile.unemployed} onChange={(value) => update("unemployed", value)} />
                 <BooleanChoice label="¿Estás inscrito/a como demandante de empleo?" value={profile.registeredJobSeeker} onChange={(value) => update("registeredJobSeeker", value)} />
               </div>
             </>
