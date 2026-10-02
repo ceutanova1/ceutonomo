@@ -46,6 +46,7 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Complete: CI quality workflow for lint, deterministic tests, production build, and browser journeys on pushes and pull requests.
 - Complete for the private demo: linked privacy information, legal/demo limitations, local-storage disclosure, and the contact-a-gestor handoff. Final legal wording and business identification still require owner/legal approval before commercial launch.
 - Complete: automated WCAG 2.1 A/AA checks for the dashboard, eligibility flow, dark theme, legal pages and the keyboard skip-link path on desktop and mobile.
+- Complete: a concrete fiscal, source-freshness, legal/privacy and assisted-technology sign-off checklist in `docs/phase-one-review-checklist.md` for the remaining human approvals.
 - Pending before public production launch: assisted-technology review with representative users, final brand/legal approval, independent fiscal reviewer approval, and a decision on whether persistence/authentication remains deferred.
 
 ## Phase 2 — Structural decisions
