@@ -437,9 +437,17 @@ h3 { margin: 10px 0 5px; font-size: 1rem; }
 .legal-page section h2 { margin: 0 0 8px; font-size: 1rem; }
 .legal-page section p { margin: 0; color: var(--muted); font-size: .88rem; line-height: 1.75; }
 .legal-page section a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+.export-panel { position: relative; max-width: 1320px; margin: 18px auto 0; padding: 22px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px 28px; align-items: center; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); box-shadow: var(--shadow); }
+.export-panel h2 { margin: 5px 0 7px; font-size: 1.05rem; }
+.export-panel > div:first-child > p:last-child { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.55; }
+.export-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.export-actions button { min-width: 76px; }
+.export-status { min-height: 1.1em; grid-column: 1 / -1; margin: -8px 0 0; color: var(--green); font-size: .72rem; font-weight: 750; }
 @media (max-width: 700px) {
   .legal-page { padding: 0; }
   .legal-page-shell { min-height: 100vh; padding: 28px 20px 48px; border: 0; border-radius: 0; }
+  .export-panel { grid-template-columns: 1fr; }
+  .export-actions { display: grid; grid-template-columns: 1fr 1fr; justify-content: stretch; }
 }
 
 html[data-theme="dark"] { --canvas: #07141e; --paper: #0d1d29; --panel: #0d1d29; --ink: #ecf4f7; --muted: #95a8b4; --line: #243845; --blue-soft: #102a3a; --green-soft: #102a24; --amber-soft: #2b2416; --shadow: 0 18px 55px rgba(0,0,0,.22); color-scheme: dark; }

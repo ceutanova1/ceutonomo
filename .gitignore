@@ -13,6 +13,8 @@
 # testing
 /coverage
 /test-results/
+/tmp/
+/output/pdf/
 
 # next.js
 /.next/

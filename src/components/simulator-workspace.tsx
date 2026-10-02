@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BrandLogo } from "@/components/brand-logo";
 import { PhaseOneViews } from "@/components/phase-one-views";
 import { StructureComparison } from "@/components/structure-comparison";
+import { ScenarioExportPanel } from "@/components/scenario-export-panel";
 import {
   ClientDistributionEditor, ExpenseEditor, seedClientSegments, seedExpenses,
   type ClientSegmentDraft, type ExpenseDraft, type RevenueMode,
@@ -28,6 +29,7 @@ import { calculateEconomicActivityNetIncome2026 } from "@/domain/tax/economic-ac
 import { calculateIrpfGeneral } from "@/domain/tax/irpf";
 import { irpf2026GeneralRules } from "@/rules/2026/irpf";
 import { reta2026Rules } from "@/rules/2026/reta";
+import sources from "@/rules/2026/sources.json";
 
 const EligibilityWorkspace = dynamic(
   () => import("@/components/eligibility-workspace").then((module) => module.EligibilityWorkspace),
@@ -356,6 +358,37 @@ export function SimulatorWorkspace() {
         </section>
 
         <section className="warning-panel"><AlertTriangle aria-hidden="true" size={20} /><div><b>Antes de darte de alta o comprar equipo</b><p>No hemos verificado una convocatoria PROCESA de autoempleo activa en 2026. Confirma si la solicitud debe presentarse antes del alta, la inversión o el inicio de actividad.</p></div><button type="button" onClick={() => setActiveView("Ayudas")}>Ver ayudas</button></section>
+        {model.revenue && model.expenses && model.contribution && model.irpf && model.netAnnualIncome ? <ScenarioExportPanel locale={locale} draft={{
+          locale,
+          profile: {
+            age: profile.age ?? parseInteger(taxpayerAge, 35),
+            residentInCeuta: resident,
+            activityPerformedInCeuta: worksInCeuta,
+            legalStructure: profile.legalStructure ?? "AUTONOMO",
+          },
+          assumptions: {
+            revenueMethod: revenueMode,
+            qualifyingCeutaIncomePercentage: parseInteger(qualifyingCeutaPercentage, 0),
+            simplifiedDirectEstimation,
+            dependentWorkerReduction,
+            expenseLines: expenses.length,
+            classifiedClientPercentage: clientDistribution.totalBasisPoints / 100,
+          },
+          results: {
+            annualRevenueCents: model.revenue.value.cents,
+            deductibleExpensesCents: model.expenses.value.cents,
+            retaContributionCents: model.contribution.finalAnnualContribution.cents,
+            estimatedIrpfCents: model.irpf.estimatedGeneralIrpf.cents,
+            netAnnualIncomeCents: model.netAnnualIncome.cents,
+            recurringSavingCents: model.irpf.ceutaGeneralDeduction.cents + model.contribution.annualSaving.cents,
+          },
+          warnings: [
+            "No incluye base del ahorro, IPSI, otras reducciones, deducciones ni pagos a cuenta.",
+            "La cuota reducida 2026 y su compatibilidad con la bonificación de Ceuta permanecen pendientes de verificación.",
+            "Las ayudas potenciales no se incluyen en el ahorro recurrente ni en el neto anual.",
+          ],
+          sources: sources.filter((source) => ["BOE-LIRPF-35-2006-68-4", "BOE-RDL-22-2026-ART-36", "BOE-ORDER-PJC-297-2026-ART-18", "LGSS-ART-308-2026", "RDL-22-2026-DA-64"].includes(source.id)).map((source) => ({ id: source.id, title: source.title, url: source.url, verifiedAt: source.lastVerified })),
+        }} /> : null}
         <section className="advisor-cta" aria-labelledby="advisor-title"><div><p className="eyebrow">SIGUIENTE PASO</p><h2 id="advisor-title">¿Tu simulación encaja contigo?</h2><p>Envía el resumen a un gestor para revisar los hechos, las compatibilidades y la documentación antes de tomar decisiones.</p></div><a className="primary-button" href="mailto:medalibenali2@gmail.com?subject=Consulta%20CEUTONOMO%20%E2%80%94%20revisi%C3%B3n%20de%20simulaci%C3%B3n&body=Hola%2C%20he%20completado%20una%20simulaci%C3%B3n%20en%20CEUTONOMO%20y%20quiero%20revisarla%20con%20un%20gestor."><Send size={16} /> Solicitar revisión</a></section>
         <footer className="disclaimer">Este simulador ofrece estimaciones informativas según el ejercicio y las reglas verificadas. No sustituye el asesoramiento de la Agencia Tributaria, Seguridad Social, PROCESA o un asesor fiscal cualificado.</footer>
         </>}

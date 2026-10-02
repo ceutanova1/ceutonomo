@@ -106,3 +106,22 @@ test("privacy and legal information are reachable from the demo", async ({ page 
   await expect(page.getByRole("heading", { name: "Aviso legal y condiciones de uso" })).toBeVisible();
   await expect(page.getByText("Los resultados son orientativos")).toBeVisible();
 });
+
+test("scenario exports include portable data and a real PDF", async ({ page }) => {
+  await openReadyApp(page);
+  const cookieButton = page.getByRole("button", { name: "Solo esenciales" });
+  if (await cookieButton.isVisible()) await cookieButton.click();
+
+  for (const format of ["CSV", "JSON", "XML"] as const) {
+    const downloadPromise = page.waitForEvent("download");
+    await page.getByRole("button", { name: format, exact: true }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toBe(`ceutonomo-simulacion-2026.${format.toLowerCase()}`);
+  }
+
+  const pdfPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "PDF", exact: true }).click();
+  const pdf = await pdfPromise;
+  expect(pdf.suggestedFilename()).toBe("ceutonomo-simulacion-2026.pdf");
+  await expect(page.getByText("PDF preparado en este dispositivo.")).toBeVisible();
+});
