@@ -91,3 +91,18 @@ test("phase one views are functional and share eligibility state", async ({ page
   await page.getByRole("button", { name: "Fuentes" }).click();
   await expect(page.getByRole("heading", { name: "La trazabilidad forma parte del resultado." })).toBeVisible();
 });
+
+test("privacy and legal information are reachable from the demo", async ({ page }) => {
+  await openReadyApp(page);
+  await page.getByRole("link", { name: "Privacidad", exact: true }).click();
+  await expect(page).toHaveURL(/\/privacidad$/);
+  await expect(page.getByRole("heading", { name: "Privacidad" })).toBeVisible();
+  await expect(page.getByText("Los importes, respuestas y escenarios se guardan únicamente")).toBeVisible();
+
+  await page.getByRole("link", { name: "Volver a CEUTONOMO" }).click();
+  await expect(page.locator(".app-shell")).toHaveAttribute("data-interface-ready", "true");
+  await page.getByRole("link", { name: "Aviso legal" }).click();
+  await expect(page).toHaveURL(/\/legal$/);
+  await expect(page.getByRole("heading", { name: "Aviso legal y condiciones de uso" })).toBeVisible();
+  await expect(page.getByText("Los resultados son orientativos")).toBeVisible();
+});

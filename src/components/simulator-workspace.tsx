@@ -6,6 +6,7 @@ import {
   MapPinned, Moon, ReceiptText, Scale, Send, ShieldCheck, Sparkles, Sun, TrendingUp, WalletCards,
 } from "lucide-react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { BrandLogo } from "@/components/brand-logo";
@@ -248,6 +249,10 @@ export function SimulatorWorkspace() {
             <div className="preference-group"><button type="button" aria-label={locale === "es" ? "Tema claro" : "Light theme"} className={theme === "light" ? "selected icon-choice" : "icon-choice"} onClick={() => changeTheme("light")}><Sun size={15} /></button><button type="button" aria-label={locale === "es" ? "Tema oscuro" : "Dark theme"} className={theme === "dark" ? "selected icon-choice" : "icon-choice"} onClick={() => changeTheme("dark")}><Moon size={15} /></button></div>
           </div>
           <div className="verified-note"><FileCheck2 aria-hidden="true" size={18} /><span>{locale === "es" ? "Reglas 2026" : "2026 rules"}<small>{locale === "es" ? "Verificación en curso" : "Verification in progress"}</small></span></div>
+          <nav className="legal-links" aria-label={locale === "es" ? "Información legal" : "Legal information"}>
+            <Link href="/privacidad">{locale === "es" ? "Privacidad" : "Privacy"}</Link>
+            <Link href="/legal">{locale === "es" ? "Aviso legal" : "Legal notice"}</Link>
+          </nav>
         </div>
       </aside>
 
@@ -255,6 +260,8 @@ export function SimulatorWorkspace() {
         <div className="mobile-preferences">
           <button type="button" onClick={() => changeLocale(locale === "es" ? "en" : "es")}><Languages size={15} /> {locale === "es" ? "EN" : "ES"}</button>
           <button type="button" aria-label={locale === "es" ? (theme === "light" ? "Tema oscuro" : "Tema claro") : (theme === "light" ? "Dark theme" : "Light theme")} onClick={() => changeTheme(theme === "light" ? "dark" : "light")}>{theme === "light" ? <Moon size={15} /> : <Sun size={15} />}</button>
+          <Link className="mobile-legal-link" href="/privacidad">{locale === "es" ? "Privacidad" : "Privacy"}</Link>
+          <Link className="mobile-legal-link" href="/legal">{locale === "es" ? "Aviso legal" : "Legal"}</Link>
         </div>
         {activeView === "Elegibilidad" ? <EligibilityWorkspace profile={profile} onProfileChange={updateProfile} /> : activeView === "Autónomo vs SL" ? <StructureComparison locale={locale} annualRevenueCents={model.revenue?.value.cents ?? 0} autonomoExpenseCents={model.expenses?.value.cents ?? 0} autonomoNetCents={model.netAnnualIncome?.cents ?? 0} /> : activeView === "Simulador" || activeView === "Beneficios" || activeView === "Ayudas" || activeView === "Hoja de ruta" || activeView === "Fuentes" ? <PhaseOneViews view={activeView} profile={profile} annualRevenueCents={model.revenue?.value.cents ?? 0} annualNetCents={model.netAnnualIncome?.cents ?? 0} recurringSavingCents={model.irpf && model.contribution ? model.irpf.ceutaGeneralDeduction.cents + model.contribution.annualSaving.cents : 0} onNavigate={setActiveView} /> : activeView === "Ebook" ? (
           <section className="ebook-panel">

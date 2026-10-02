@@ -43,7 +43,9 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Pending: any additional individually verified PROCESA calls, full grant application workflow, and personalized roadmap. The autoemployment page remains limited to 2022 calls and is intentionally disabled for 2026.
 - Verified: 63 deterministic unit/regression tests, lint, production build, and seven Playwright flows across desktop and mobile, including shared-state navigation through every Phase 1 view.
 - Security note: `npm audit --omit=dev` currently reports four high-severity advisories in Prisma 7.10 transitive tooling (`deepmerge-ts` and `mysql2`). The offered automatic fix downgrades Prisma to 6 and is therefore not applied without a planned migration. Recheck upstream before deployment and do not expose Prisma CLI tooling in the runtime image.
-- Pending before public production launch: CI wiring, formal accessibility audit, privacy/brand decisions, persistence/authentication, and independent fiscal reviewer approval.
+- Complete: CI quality workflow for lint, deterministic tests, production build, and browser journeys on pushes and pull requests.
+- Complete for the private demo: linked privacy information, legal/demo limitations, local-storage disclosure, and the contact-a-gestor handoff. Final legal wording and business identification still require owner/legal approval before commercial launch.
+- Pending before public production launch: formal accessibility audit, final brand/legal approval, independent fiscal reviewer approval, and a decision on whether persistence/authentication remains deferred.
 
 ## Phase 2 — Structural decisions
 
@@ -69,7 +71,6 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 
 ## Immediate implementation order
 
-1. Add automated browser tests for the completed Phase 1 flows.
-2. Complete the formal accessibility review and keyboard walkthrough.
-3. Obtain fiscal review of the published 2026 ruleset.
-4. Confirm brand identity, persistence and authentication decisions before public launch.
+1. Complete the formal accessibility review and keyboard walkthrough.
+2. Obtain fiscal review of the published 2026 ruleset.
+3. Confirm final brand/legal wording and whether persistence/authentication remains deferred before public launch.

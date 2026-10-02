@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const STORAGE_KEY = "ceutaunomo-cookie-preference-v1";
 
@@ -19,7 +20,7 @@ export function CookieConsent() {
   if (!visible) return null;
   return (
     <aside className="cookie-banner" aria-label="Preferencias de cookies" aria-live="polite">
-      <div><strong>Tu privacidad, sin letra pequeña</strong><p>CEUTONOMO usa almacenamiento local para guardar tus escenarios. Las analíticas no se activarán sin tu consentimiento.</p></div>
+      <div><strong>Tu privacidad, sin letra pequeña</strong><p>CEUTONOMO usa almacenamiento local para guardar tus escenarios. Las analíticas no se activarán sin tu consentimiento. <Link href="/privacidad">Más información</Link>.</p></div>
       <div className="cookie-actions"><button type="button" onClick={() => choose("ESSENTIAL")}>Solo esenciales</button><button type="button" className="primary-button" onClick={() => choose("ANALYTICS")}>Aceptar analíticas</button></div>
     </aside>
   );

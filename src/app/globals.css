@@ -420,6 +420,26 @@ h3 { margin: 10px 0 5px; font-size: 1rem; }
   .client-note em { width: 100%; margin-left: 28px; }
 }
 
+/* Phase 1 legal and privacy surfaces */
+.legal-links { display: flex; justify-content: center; gap: 12px; margin-top: 12px; }
+.legal-links a { color: #a9bdc8; font-size: .65rem; text-decoration: none; }
+.legal-links a:hover { color: #fff; text-decoration: underline; }
+.mobile-legal-link { color: var(--blue); font-size: .7rem; font-weight: 750; text-decoration: none; }
+.cookie-banner a { color: var(--blue); font-weight: 750; }
+.legal-page { min-height: 100vh; padding: 48px 20px; background: var(--canvas); color: var(--ink); }
+.legal-page-shell { width: min(760px, 100%); margin: 0 auto; padding: 40px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); box-shadow: var(--shadow); }
+.legal-back { display: inline-flex; margin-bottom: 36px; color: var(--blue); font-size: .78rem; font-weight: 750; text-decoration: none; }
+.legal-page h1 { margin: 8px 0 14px; max-width: 680px; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.02; letter-spacing: -.05em; }
+.legal-lede { margin: 0 0 32px; color: var(--muted); font-size: 1rem; line-height: 1.7; }
+.legal-page section { padding: 22px 0; border-top: 1px solid var(--line); }
+.legal-page section h2 { margin: 0 0 8px; font-size: 1rem; }
+.legal-page section p { margin: 0; color: var(--muted); font-size: .88rem; line-height: 1.75; }
+.legal-page section a { color: var(--blue); }
+@media (max-width: 700px) {
+  .legal-page { padding: 0; }
+  .legal-page-shell { min-height: 100vh; padding: 28px 20px 48px; border: 0; border-radius: 0; }
+}
+
 html[data-theme="dark"] { --canvas: #07141e; --paper: #0d1d29; --panel: #0d1d29; --ink: #ecf4f7; --muted: #95a8b4; --line: #243845; --blue-soft: #102a3a; --green-soft: #102a24; --amber-soft: #2b2416; --shadow: 0 18px 55px rgba(0,0,0,.22); color-scheme: dark; }
 html[data-theme="dark"] {
   body { color-scheme: dark; }
