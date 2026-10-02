@@ -50,6 +50,7 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Complete for demo readiness: client-side PDF, CSV, JSON and XML exports containing the scenario, assumptions, warnings, generation date and official-source provenance without sending scenario data to the server.
 - Complete for demo readiness: consent-gated Google Analytics integration with no tracking before opt-in, no simulation values in events, a withdrawal control, and a disabled honest state until the measurement ID is configured.
 - Complete for demo readiness: confirmed one-action restoration of the seeded scenario while preserving language, theme and cookie preferences between guided demonstrations.
+- Complete for demo readiness: an eight-minute private-demo runbook with preflight values, compliant talking points, recovery steps and post-demo notes.
 - Pending before public production launch: assisted-technology review with representative users, final brand/legal approval, independent fiscal reviewer approval, and a decision on whether persistence/authentication remains deferred.
 
 ## Phase 2 — Structural decisions

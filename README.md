@@ -48,3 +48,5 @@ No se deben guardar secretos ni credenciales en el repositorio. Las futuras vari
 ## Estado del producto
 
 La fase 1 incluye el dashboard, el diagnóstico, el simulador, la comparación inicial entre autónomo y SL, beneficios, ayudas, fuentes y una hoja de ruta conectada. El ebook y su venta pertenecen a la fase final.
+
+Las demostraciones privadas deben seguir la [guía de demo](docs/demo-runbook.md), que incluye preparación, recorrido, límites de comunicación y recuperación del escenario inicial.
