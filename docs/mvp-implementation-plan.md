@@ -41,7 +41,7 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Partial: reduced-fee personal eligibility and request timing are modeled. The 2026 amount and compatibility/priority against the Ceuta bonus remain `NEEDS_VERIFICATION` because the official sources inspected do not publish those parameters.
 - Complete: dated fifth/sixth 2026 PROCESA indefinite-hiring windows, amount bands, apply-before-hire warning, source links, and current-window evaluation.
 - Pending: any additional individually verified PROCESA calls, full grant application workflow, and personalized roadmap. The autoemployment page remains limited to 2022 calls and is intentionally disabled for 2026.
-- Verified: 70 deterministic unit/regression tests, lint, production build, and 12 Playwright flows across desktop and mobile, including shared-state navigation through every Phase 1 view, all four export formats, consent-gated analytics behavior, and repeatable demo restoration.
+- Verified: 70 deterministic unit/regression tests, lint, production build, and 13 Playwright flows across desktop and mobile, including shared-state navigation through every Phase 1 view, all four export formats, consent-gated analytics behavior, repeatable demo restoration, and response-header protection.
 - Security note: `npm audit --omit=dev` currently reports four high-severity advisories in Prisma 7.10 transitive tooling (`deepmerge-ts` and `mysql2`). The offered automatic fix downgrades Prisma to 6 and is therefore not applied without a planned migration. Recheck upstream before deployment and do not expose Prisma CLI tooling in the runtime image.
 - Complete: CI quality workflow for lint, deterministic tests, production build, and browser journeys on pushes and pull requests.
 - Complete for the private demo: linked privacy information, legal/demo limitations, local-storage disclosure, and the contact-a-gestor handoff. Final legal wording and business identification still require owner/legal approval before commercial launch.
@@ -52,6 +52,7 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Complete for demo readiness: confirmed one-action restoration of the seeded scenario while preserving language, theme and cookie preferences between guided demonstrations.
 - Complete for demo readiness: an eight-minute private-demo runbook with preflight values, compliant talking points, recovery steps and post-demo notes.
 - Complete for private-demo discoverability: page-level `noindex, nofollow` metadata and a site-wide crawler disallow rule. This is not access control; authenticated access remains an owner decision.
+- Complete for demo browser hardening: MIME sniffing, framing, referrer, browser capability and HTTP crawler headers are set globally. A nonce-based Content Security Policy remains a separate production-hardening decision because the current app uses framework and theme bootstrap scripts.
 - Pending before public production launch: assisted-technology review with representative users, final brand/legal approval, independent fiscal reviewer approval, and a decision on whether persistence/authentication remains deferred.
 
 ## Phase 2 — Structural decisions

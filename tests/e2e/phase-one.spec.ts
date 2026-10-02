@@ -136,6 +136,18 @@ test("privacy and legal information are reachable from the demo", async ({ page 
   expect(await robotsResponse.text()).toContain("Disallow: /");
 });
 
+test("private demo responses include crawler and browser protections", async ({ page }) => {
+  const response = await page.request.get("/");
+  expect(response.ok()).toBe(true);
+  const headers = response.headers();
+  expect(headers["x-content-type-options"]).toBe("nosniff");
+  expect(headers["x-frame-options"]).toBe("DENY");
+  expect(headers["referrer-policy"]).toBe("strict-origin-when-cross-origin");
+  expect(headers["permissions-policy"]).toContain("camera=()");
+  expect(headers["permissions-policy"]).toContain("browsing-topics=()");
+  expect(headers["x-robots-tag"]).toBe("noindex, nofollow, noarchive");
+});
+
 test("scenario exports include portable data and a real PDF", async ({ page }) => {
   await openReadyApp(page);
   const cookieButton = page.getByRole("button", { name: "Solo esenciales" });
