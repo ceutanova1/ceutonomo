@@ -29,6 +29,7 @@ import { calculateEconomicActivityNetIncome2026 } from "@/domain/tax/economic-ac
 import { calculateIrpfGeneral } from "@/domain/tax/irpf";
 import { irpf2026GeneralRules } from "@/rules/2026/irpf";
 import { reta2026Rules } from "@/rules/2026/reta";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 import sources from "@/rules/2026/sources.json";
 
 const EligibilityWorkspace = dynamic(
@@ -389,7 +390,7 @@ export function SimulatorWorkspace() {
           ],
           sources: sources.filter((source) => ["BOE-LIRPF-35-2006-68-4", "BOE-RDL-22-2026-ART-36", "BOE-ORDER-PJC-297-2026-ART-18", "LGSS-ART-308-2026", "RDL-22-2026-DA-64"].includes(source.id)).map((source) => ({ id: source.id, title: source.title, url: source.url, verifiedAt: source.lastVerified })),
         }} /> : null}
-        <section className="advisor-cta" aria-labelledby="advisor-title"><div><p className="eyebrow">SIGUIENTE PASO</p><h2 id="advisor-title">¿Tu simulación encaja contigo?</h2><p>Envía el resumen a un gestor para revisar los hechos, las compatibilidades y la documentación antes de tomar decisiones.</p></div><a className="primary-button" href="mailto:medalibenali2@gmail.com?subject=Consulta%20CEUTONOMO%20%E2%80%94%20revisi%C3%B3n%20de%20simulaci%C3%B3n&body=Hola%2C%20he%20completado%20una%20simulaci%C3%B3n%20en%20CEUTONOMO%20y%20quiero%20revisarla%20con%20un%20gestor."><Send size={16} /> Solicitar revisión</a></section>
+        <section className="advisor-cta" aria-labelledby="advisor-title"><div><p className="eyebrow">SIGUIENTE PASO</p><h2 id="advisor-title">¿Tu simulación encaja contigo?</h2><p>Envía el resumen a un gestor para revisar los hechos, las compatibilidades y la documentación antes de tomar decisiones.</p></div><a className="primary-button" onClick={() => trackAnalyticsEvent("advisor_contact_started", { channel: "email" })} href="mailto:medalibenali2@gmail.com?subject=Consulta%20CEUTONOMO%20%E2%80%94%20revisi%C3%B3n%20de%20simulaci%C3%B3n&body=Hola%2C%20he%20completado%20una%20simulaci%C3%B3n%20en%20CEUTONOMO%20y%20quiero%20revisarla%20con%20un%20gestor."><Send size={16} /> Solicitar revisión</a></section>
         <footer className="disclaimer">Este simulador ofrece estimaciones informativas según el ejercicio y las reglas verificadas. No sustituye el asesoramiento de la Agencia Tributaria, Seguridad Social, PROCESA o un asesor fiscal cualificado.</footer>
         </>}
       </main>

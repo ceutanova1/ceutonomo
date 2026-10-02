@@ -2,7 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
 const openReadyApp = async (page: Page) => {
-  await page.addInitScript(() => window.localStorage.setItem("ceutaunomo-cookie-preference-v1", "ESSENTIAL"));
+  await page.addInitScript(() => window.localStorage.setItem("ceutonomo-cookie-preference-v2", "ESSENTIAL"));
   await page.goto("/");
   await expect(page.locator(".app-shell")).toHaveAttribute("data-interface-ready", "true");
 };

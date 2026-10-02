@@ -11,6 +11,7 @@ import {
   type ScenarioReport,
   type ScenarioReportDraft,
 } from "@/domain/exports/scenario-report";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 type ScenarioExportPanelProps = Readonly<{
   draft: ScenarioReportDraft;
@@ -156,6 +157,7 @@ export function ScenarioExportPanel({ draft, locale }: ScenarioExportPanelProps)
   const [status, setStatus] = useState<string | null>(null);
   const build = () => finalizeScenarioReport(draft);
   const done = (format: string) => {
+    trackAnalyticsEvent("scenario_exported", { format: format.toLowerCase() });
     setStatus(locale === "es" ? `${format} preparado en este dispositivo.` : `${format} prepared on this device.`);
     window.setTimeout(() => setStatus(null), 3000);
   };

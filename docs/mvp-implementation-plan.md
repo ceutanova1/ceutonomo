@@ -41,13 +41,14 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Partial: reduced-fee personal eligibility and request timing are modeled. The 2026 amount and compatibility/priority against the Ceuta bonus remain `NEEDS_VERIFICATION` because the official sources inspected do not publish those parameters.
 - Complete: dated fifth/sixth 2026 PROCESA indefinite-hiring windows, amount bands, apply-before-hire warning, source links, and current-window evaluation.
 - Pending: any additional individually verified PROCESA calls, full grant application workflow, and personalized roadmap. The autoemployment page remains limited to 2022 calls and is intentionally disabled for 2026.
-- Verified: 67 deterministic unit/regression tests, lint, production build, and 11 Playwright flows across desktop and mobile, including shared-state navigation through every Phase 1 view and all four export formats.
+- Verified: 70 deterministic unit/regression tests, lint, production build, and 11 Playwright flows across desktop and mobile, including shared-state navigation through every Phase 1 view, all four export formats, and consent-gated analytics behavior.
 - Security note: `npm audit --omit=dev` currently reports four high-severity advisories in Prisma 7.10 transitive tooling (`deepmerge-ts` and `mysql2`). The offered automatic fix downgrades Prisma to 6 and is therefore not applied without a planned migration. Recheck upstream before deployment and do not expose Prisma CLI tooling in the runtime image.
 - Complete: CI quality workflow for lint, deterministic tests, production build, and browser journeys on pushes and pull requests.
 - Complete for the private demo: linked privacy information, legal/demo limitations, local-storage disclosure, and the contact-a-gestor handoff. Final legal wording and business identification still require owner/legal approval before commercial launch.
 - Complete: automated WCAG 2.1 A/AA checks for the dashboard, eligibility flow, dark theme, legal pages and the keyboard skip-link path on desktop and mobile.
 - Complete: a concrete fiscal, source-freshness, legal/privacy and assisted-technology sign-off checklist in `docs/phase-one-review-checklist.md` for the remaining human approvals.
 - Complete for demo readiness: client-side PDF, CSV, JSON and XML exports containing the scenario, assumptions, warnings, generation date and official-source provenance without sending scenario data to the server.
+- Complete for demo readiness: consent-gated Google Analytics integration with no tracking before opt-in, no simulation values in events, a withdrawal control, and a disabled honest state until the measurement ID is configured.
 - Pending before public production launch: assisted-technology review with representative users, final brand/legal approval, independent fiscal reviewer approval, and a decision on whether persistence/authentication remains deferred.
 
 ## Phase 2 — Structural decisions

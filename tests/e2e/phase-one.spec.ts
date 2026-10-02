@@ -45,6 +45,10 @@ test("CEUTONOMO stores the anonymous scenario locally with explicit cookie choic
   await expect.poll(() => page.evaluate(() => Boolean(window.localStorage.getItem("ceutaunomo-scenario-v1")))).toBe(true);
   await page.getByRole("button", { name: "Solo esenciales" }).click();
   await expect(page.getByRole("complementary", { name: "Preferencias de cookies" })).toBeHidden();
+  await expect.poll(() => page.evaluate(() => window.localStorage.getItem("ceutonomo-cookie-preference-v2"))).toBe("ESSENTIAL");
+  await expect(page.locator('script[src*="googletagmanager.com"]')).toHaveCount(0);
+  await page.getByRole("button", { name: "Cambiar preferencias de cookies" }).click();
+  await expect(page.getByRole("button", { name: "Analíticas próximamente" })).toBeDisabled();
 });
 
 test("company comparison separates retained profit from personal net income", async ({ page }) => {
