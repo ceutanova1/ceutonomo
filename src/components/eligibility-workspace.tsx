@@ -8,12 +8,16 @@ import { evaluateReducedFee2026 } from "@/domain/eligibility/reduced-fee";
 import { evaluateCeutaExtraordinaryAid2026 } from "@/domain/grants/ceuta-extraordinary-aid";
 import { evaluateHiringGrant } from "@/domain/grants/grant-program";
 import { type BusinessProfileFacts } from "@/domain/profile";
+import { localizeDomainText, pick, type AppLocale } from "@/lib/locale";
 import { benefitRules2026 } from "@/rules/2026/benefits";
 import { procesaIndefiniteHiring2026 } from "@/rules/2026/grant-programs";
 import { ceutaExtraordinaryAid2026Rules } from "@/rules/2026/direct-aid";
 import sources from "@/rules/2026/sources.json";
 
-const steps = ["Situación personal", "Actividad", "Implantación", "Resultado"] as const;
+const steps = {
+  es: ["Situación personal", "Actividad", "Implantación", "Resultado"],
+  en: ["Personal situation", "Activity", "Presence", "Result"],
+} as const;
 
 const statusCopy = {
   ELIGIBLE: "Elegible",
@@ -22,37 +26,45 @@ const statusCopy = {
   NEEDS_VERIFICATION: "Faltan datos",
 } as const;
 
+const englishStatusCopy = {
+  ELIGIBLE: "Eligible",
+  POTENTIALLY_ELIGIBLE: "Potentially applicable",
+  NOT_ELIGIBLE: "Not applicable",
+  NEEDS_VERIFICATION: "Missing facts",
+} as const;
+
 const activityOptions = [
-  ["SOFTWARE_DEVELOPMENT", "Desarrollo de software"],
-  ["IT_CONSULTING", "Consultoría IT"],
+  ["SOFTWARE_DEVELOPMENT", "Desarrollo de software", "Software development"],
+  ["IT_CONSULTING", "Consultoría IT", "IT consulting"],
   ["SAAS", "SaaS"],
-  ["ECOMMERCE", "E-commerce"],
+  ["ECOMMERCE", "E-commerce", "E-commerce"],
   ["MARKETING", "Marketing"],
-  ["CALL_CENTRE", "Centro de llamadas"],
-  ["PROFESSIONAL_SERVICES", "Servicios profesionales"],
-  ["RETAIL", "Comercio"],
-  ["HOSPITALITY", "Hostelería"],
-  ["TOURISM", "Turismo"],
-  ["CONSTRUCTION", "Construcción"],
-  ["OTHER", "Otra"],
+  ["CALL_CENTRE", "Centro de llamadas", "Call centre"],
+  ["PROFESSIONAL_SERVICES", "Servicios profesionales", "Professional services"],
+  ["RETAIL", "Comercio", "Retail"],
+  ["HOSPITALITY", "Hostelería", "Hospitality"],
+  ["TOURISM", "Turismo", "Tourism"],
+  ["CONSTRUCTION", "Construcción", "Construction"],
+  ["OTHER", "Otra", "Other"],
 ] as const;
 
 const sourceById = new Map(sources.map((source) => [source.id, source]));
 
 type BooleanChoiceProps = {
+  locale: AppLocale;
   label: string;
   help?: string;
   value: boolean | undefined;
   onChange: (value: boolean) => void;
 };
 
-function BooleanChoice({ label, help, value, onChange }: BooleanChoiceProps) {
+function BooleanChoice({ locale, label, help, value, onChange }: BooleanChoiceProps) {
   return (
     <fieldset className="choice-field">
       <legend>{label}</legend>
       {help ? <small>{help}</small> : null}
       <div className="segmented-control">
-        <button type="button" className={value === true ? "selected" : ""} onClick={() => onChange(true)}>Sí</button>
+        <button type="button" className={value === true ? "selected" : ""} onClick={() => onChange(true)}>{pick(locale, "Sí", "Yes")}</button>
         <button type="button" className={value === false ? "selected" : ""} onClick={() => onChange(false)}>No</button>
       </div>
     </fieldset>
@@ -60,11 +72,12 @@ function BooleanChoice({ label, help, value, onChange }: BooleanChoiceProps) {
 }
 
 type EligibilityWorkspaceProps = Readonly<{
+  locale: AppLocale;
   profile: BusinessProfileFacts;
   onProfileChange: (profile: BusinessProfileFacts) => void;
 }>;
 
-export function EligibilityWorkspace({ profile, onProfileChange }: EligibilityWorkspaceProps) {
+export function EligibilityWorkspace({ locale, profile, onProfileChange }: EligibilityWorkspaceProps) {
   const [step, setStep] = useState(0);
   const results = useMemo(() => evaluateBenefitRules(benefitRules2026, profile), [profile]);
   const reducedFee = useMemo(() => evaluateReducedFee2026({ firstTimeAutonomo: profile.firstTimeAutonomo, previousAutonomoEndDate: profile.previousAutonomoEndDate, previouslyUsedReducedFee: profile.previouslyUsedReducedFee, plannedStartDate: profile.estimatedStartDate }), [profile.firstTimeAutonomo, profile.previousAutonomoEndDate, profile.previouslyUsedReducedFee, profile.estimatedStartDate]);
@@ -79,16 +92,16 @@ export function EligibilityWorkspace({ profile, onProfileChange }: EligibilityWo
     <div className="eligibility-workspace">
       <header className="workspace-header compact-header">
         <div>
-          <p className="eyebrow">DIAGNÓSTICO DE ELEGIBILIDAD</p>
-          <h1>Primero los hechos. Después, los beneficios.</h1>
-          <p className="lede">Completa solo los datos necesarios. Las respuestas incompletas se muestran como “Faltan datos”, nunca como elegibilidad.</p>
+          <p className="eyebrow">{pick(locale, "DIAGNÓSTICO DE ELEGIBILIDAD", "ELIGIBILITY ASSESSMENT")}</p>
+          <h1>{pick(locale, "Primero los hechos. Después, los beneficios.", "Facts first. Benefits second.")}</h1>
+          <p className="lede">{pick(locale, "Completa solo los datos necesarios. Las respuestas incompletas se muestran como “Faltan datos”, nunca como elegibilidad.", "Complete only the necessary facts. Incomplete answers appear as “Missing facts”, never as eligibility.")}</p>
         </div>
-        <span className="privacy-pill"><ShieldCheck size={15} /> Sin guardar en servidor</span>
+        <span className="privacy-pill"><ShieldCheck size={15} /> {pick(locale, "Sin guardar en servidor", "Not stored on a server")}</span>
       </header>
 
       <div className="onboarding-layout">
-        <aside className="stepper" aria-label="Progreso del diagnóstico">
-          {steps.map((label, index) => (
+        <aside className="stepper" aria-label={pick(locale, "Progreso del diagnóstico", "Assessment progress")}>
+          {steps[locale].map((label, index) => (
             <button type="button" key={label} className={index === step ? "current" : index < step ? "complete" : ""} onClick={() => setStep(index)}>
               <span>{index < step ? <Check size={15} /> : index + 1}</span><b>{label}</b>
             </button>
@@ -98,85 +111,85 @@ export function EligibilityWorkspace({ profile, onProfileChange }: EligibilityWo
         <section className="wizard-card" aria-live="polite">
           {step === 0 ? (
             <>
-              <div className="section-heading"><div><p className="eyebrow">PASO 1 DE 4</p><h2>Situación personal</h2></div></div>
-              <p className="form-intro">Estos datos afectan a la residencia fiscal y a incentivos que pueden exigir una situación previa concreta.</p>
+              <div className="section-heading"><div><p className="eyebrow">{pick(locale, "PASO 1 DE 4", "STEP 1 OF 4")}</p><h2>{pick(locale, "Situación personal", "Personal situation")}</h2></div></div>
+              <p className="form-intro">{pick(locale, "Estos datos afectan a la residencia fiscal y a incentivos que pueden exigir una situación previa concreta.", "These facts affect tax residence and incentives that may require a specific prior situation.")}</p>
               <div className="wizard-grid">
-                <label>Edad<input type="number" min="18" max="100" value={profile.age ?? ""} onChange={(event) => update("age", Number(event.target.value))} /></label>
-                <label>Residencia fiscal<select value={profile.taxResidenceCountry ?? ""} onChange={(event) => update("taxResidenceCountry", event.target.value)}><option value="">Seleccionar</option><option value="ES">España</option><option value="OTHER">Otro país</option></select></label>
-                <BooleanChoice label="¿Resides efectivamente en Ceuta?" value={profile.residentInCeuta} onChange={(value) => update("residentInCeuta", value)} />
-                <BooleanChoice label="¿Estás empadronado/a en Ceuta?" value={profile.registeredInCeuta} onChange={(value) => update("registeredInCeuta", value)} />
-                <label>Fecha de inicio de residencia <span className="optional">Opcional</span><input type="date" value={profile.residenceStartDate ?? ""} onChange={(event) => update("residenceStartDate", event.target.value)} /></label>
-                <BooleanChoice label="¿Es tu primera alta como autónomo?" value={profile.firstTimeAutonomo} onChange={(value) => update("firstTimeAutonomo", value)} />
+                <label>{pick(locale, "Edad", "Age")}<input type="number" min="18" max="100" value={profile.age ?? ""} onChange={(event) => update("age", Number(event.target.value))} /></label>
+                <label>{pick(locale, "Residencia fiscal", "Tax residence")}<select value={profile.taxResidenceCountry ?? ""} onChange={(event) => update("taxResidenceCountry", event.target.value)}><option value="">{pick(locale, "Seleccionar", "Select")}</option><option value="ES">{pick(locale, "España", "Spain")}</option><option value="OTHER">{pick(locale, "Otro país", "Another country")}</option></select></label>
+                <BooleanChoice locale={locale} label={pick(locale, "¿Resides efectivamente en Ceuta?", "Do you effectively reside in Ceuta?")} value={profile.residentInCeuta} onChange={(value) => update("residentInCeuta", value)} />
+                <BooleanChoice locale={locale} label={pick(locale, "¿Estás empadronado/a en Ceuta?", "Are you registered as a resident in Ceuta?")} value={profile.registeredInCeuta} onChange={(value) => update("registeredInCeuta", value)} />
+                <label>{pick(locale, "Fecha de inicio de residencia", "Residence start date")} <span className="optional">{pick(locale, "Opcional", "Optional")}</span><input type="date" value={profile.residenceStartDate ?? ""} onChange={(event) => update("residenceStartDate", event.target.value)} /></label>
+                <BooleanChoice locale={locale} label={pick(locale, "¿Es tu primera alta como autónomo?", "Is this your first self-employed registration?")} value={profile.firstTimeAutonomo} onChange={(value) => update("firstTimeAutonomo", value)} />
                 {profile.firstTimeAutonomo === false ? <>
-                  <label>Fecha de la última baja en RETA<input type="date" value={profile.previousAutonomoEndDate ?? ""} onChange={(event) => update("previousAutonomoEndDate", event.target.value)} /></label>
-                  <BooleanChoice label="¿Disfrutaste antes de una cuota reducida?" value={profile.previouslyUsedReducedFee} onChange={(value) => update("previouslyUsedReducedFee", value)} />
+                  <label>{pick(locale, "Fecha de la última baja en RETA", "Last RETA deregistration date")}<input type="date" value={profile.previousAutonomoEndDate ?? ""} onChange={(event) => update("previousAutonomoEndDate", event.target.value)} /></label>
+                  <BooleanChoice locale={locale} label={pick(locale, "¿Disfrutaste antes de una cuota reducida?", "Have you previously used a reduced fee?")} value={profile.previouslyUsedReducedFee} onChange={(value) => update("previouslyUsedReducedFee", value)} />
                 </> : null}
-                <BooleanChoice label="¿Estás inscrito/a como demandante de empleo?" value={profile.registeredJobSeeker} onChange={(value) => update("registeredJobSeeker", value)} />
+                <BooleanChoice locale={locale} label={pick(locale, "¿Estás inscrito/a como demandante de empleo?", "Are you registered as a job seeker?")} value={profile.registeredJobSeeker} onChange={(value) => update("registeredJobSeeker", value)} />
               </div>
             </>
           ) : null}
 
           {step === 1 ? (
             <>
-              <div className="section-heading"><div><p className="eyebrow">PASO 2 DE 4</p><h2>Actividad y estructura</h2></div></div>
-              <p className="form-intro">La etiqueta comercial no determina por sí sola el tratamiento fiscal. Describe lo que realmente haces.</p>
+              <div className="section-heading"><div><p className="eyebrow">{pick(locale, "PASO 2 DE 4", "STEP 2 OF 4")}</p><h2>{pick(locale, "Actividad y estructura", "Activity and structure")}</h2></div></div>
+              <p className="form-intro">{pick(locale, "La etiqueta comercial no determina por sí sola el tratamiento fiscal. Describe lo que realmente haces.", "A commercial label does not determine tax treatment by itself. Describe what you actually do.")}</p>
               <div className="wizard-grid">
-                <label>Actividad<select value={profile.activityType ?? ""} onChange={(event) => update("activityType", event.target.value as BusinessProfileFacts["activityType"])}>{activityOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-                <label>Estructura<select value={profile.legalStructure ?? "UNDECIDED"} onChange={(event) => update("legalStructure", event.target.value as BusinessProfileFacts["legalStructure"])}><option value="AUTONOMO">Autónomo</option><option value="SL">SL / SLU</option><option value="UNDECIDED">Aún no decidido</option></select></label>
-                {profile.legalStructure === "SL" ? <label>Volumen de operaciones 2025 (€)<input type="number" min="0" value={profile.company2025TurnoverEuro ?? ""} onChange={(event) => update("company2025TurnoverEuro", event.target.value === "" ? undefined : Number(event.target.value))} /></label> : null}
-                <label className="full-field">Descripción de la actividad<textarea rows={4} value={profile.activityDescription ?? ""} onChange={(event) => update("activityDescription", event.target.value)} /></label>
-                <label>CNAE <span className="optional">Si lo conoces</span><input value={profile.cnae ?? ""} onChange={(event) => update("cnae", event.target.value)} /></label>
-                <label>IAE <span className="optional">Si lo conoces</span><input value={profile.iae ?? ""} onChange={(event) => update("iae", event.target.value)} /></label>
-                <BooleanChoice label="¿Es una actividad nueva?" value={profile.newBusiness} onChange={(value) => update("newBusiness", value)} />
-                <label>Fecha estimada de inicio <span className="optional">Opcional</span><input type="date" value={profile.estimatedStartDate ?? ""} onChange={(event) => update("estimatedStartDate", event.target.value)} /></label>
+                <label>{pick(locale, "Actividad", "Activity")}<select value={profile.activityType ?? ""} onChange={(event) => update("activityType", event.target.value as BusinessProfileFacts["activityType"])}>{activityOptions.map(([value, label, english = label]) => <option key={value} value={value}>{locale === "es" ? label : english}</option>)}</select></label>
+                <label>{pick(locale, "Estructura", "Structure")}<select value={profile.legalStructure ?? "UNDECIDED"} onChange={(event) => update("legalStructure", event.target.value as BusinessProfileFacts["legalStructure"])}><option value="AUTONOMO">{pick(locale, "Autónomo", "Self-employed")}</option><option value="SL">SL / SLU</option><option value="UNDECIDED">{pick(locale, "Aún no decidido", "Not decided yet")}</option></select></label>
+                {profile.legalStructure === "SL" ? <label>{pick(locale, "Volumen de operaciones 2025 (€)", "2025 turnover (€)")}<input type="number" min="0" value={profile.company2025TurnoverEuro ?? ""} onChange={(event) => update("company2025TurnoverEuro", event.target.value === "" ? undefined : Number(event.target.value))} /></label> : null}
+                <label className="full-field">{pick(locale, "Descripción de la actividad", "Activity description")}<textarea rows={4} value={profile.activityDescription ?? ""} onChange={(event) => update("activityDescription", event.target.value)} /></label>
+                <label>CNAE <span className="optional">{pick(locale, "Si lo conoces", "If known")}</span><input value={profile.cnae ?? ""} onChange={(event) => update("cnae", event.target.value)} /></label>
+                <label>IAE <span className="optional">{pick(locale, "Si lo conoces", "If known")}</span><input value={profile.iae ?? ""} onChange={(event) => update("iae", event.target.value)} /></label>
+                <BooleanChoice locale={locale} label={pick(locale, "¿Es una actividad nueva?", "Is this a new activity?")} value={profile.newBusiness} onChange={(value) => update("newBusiness", value)} />
+                <label>{pick(locale, "Fecha estimada de inicio", "Estimated start date")} <span className="optional">{pick(locale, "Opcional", "Optional")}</span><input type="date" value={profile.estimatedStartDate ?? ""} onChange={(event) => update("estimatedStartDate", event.target.value)} /></label>
               </div>
             </>
           ) : null}
 
           {step === 2 ? (
             <>
-              <div className="section-heading"><div><p className="eyebrow">PASO 3 DE 4</p><h2>Implantación real en Ceuta</h2></div></div>
-              <p className="form-intro">La elegibilidad depende de hechos acreditables: dónde trabajas, qué medios utilizas y qué renta procede de Ceuta.</p>
+              <div className="section-heading"><div><p className="eyebrow">{pick(locale, "PASO 3 DE 4", "STEP 3 OF 4")}</p><h2>{pick(locale, "Implantación real en Ceuta", "Real presence in Ceuta")}</h2></div></div>
+              <p className="form-intro">{pick(locale, "La elegibilidad depende de hechos acreditables: dónde trabajas, qué medios utilizas y qué renta procede de Ceuta.", "Eligibility depends on supportable facts: where you work, which resources you use and which income arises in Ceuta.")}</p>
               <div className="wizard-grid">
-                <BooleanChoice label="¿Realizarás efectivamente la actividad desde Ceuta?" value={profile.activityPerformedInCeuta} onChange={(value) => update("activityPerformedInCeuta", value)} />
-                <BooleanChoice label="¿Tendrás establecimiento o medios materiales en Ceuta?" value={profile.physicalEstablishmentInCeuta} onChange={(value) => update("physicalEstablishmentInCeuta", value)} />
-                <label>Lugar de trabajo<select value={profile.workplaceType ?? ""} onChange={(event) => update("workplaceType", event.target.value as BusinessProfileFacts["workplaceType"])}><option value="HOME_OFFICE">Domicilio / home office</option><option value="OFFICE">Oficina</option><option value="COWORKING">Coworking</option><option value="OTHER">Otro</option></select></label>
-                <label>Empleados actuales<input type="number" min="0" value={profile.employeesNow ?? 0} onChange={(event) => update("employeesNow", Number(event.target.value))} /></label>
-                <label>Empleados previstos<input type="number" min="0" value={profile.employeesPlanned ?? 0} onChange={(event) => update("employeesPlanned", Number(event.target.value))} /></label>
-                <label>Renta potencialmente obtenida en Ceuta <b className="range-value">{profile.qualifyingCeutaIncomePercentage ?? 0}%</b><input type="range" min="0" max="100" step="5" value={profile.qualifyingCeutaIncomePercentage ?? 0} onChange={(event) => update("qualifyingCeutaIncomePercentage", Number(event.target.value))} /><small>Es una hipótesis editable, no una validación automática.</small></label>
-                <BooleanChoice label="¿El sector figura entre los incluidos en la bonificación RETA?" help="Si no estás seguro, deja este punto para verificación profesional." value={profile.coveredCeutaSocialSecuritySector} onChange={(value) => update("coveredCeutaSocialSecuritySector", value)} />
-                <BooleanChoice label="¿Tuviste domicilio fiscal, establecimiento o inmueble afecto en Ceuta durante el período de referencia de 2026?" value={profile.ceutaPresenceDuring2026ReferencePeriod} onChange={(value) => update("ceutaPresenceDuring2026ReferencePeriod", value)} />
-                <BooleanChoice label="¿La crisis migratoria declarada afectó negativamente a tu actividad?" help="No se presume: debe declararse y poder justificarse." value={profile.negativelyAffectedBy2026MigrationCrisis} onChange={(value) => update("negativelyAffectedBy2026MigrationCrisis", value)} />
-                {profile.newBusiness ? <BooleanChoice label="¿Constabas de alta en el censo antes del 3 de septiembre de 2026?" value={profile.registeredInTaxCensusBefore2026Measure} onChange={(value) => update("registeredInTaxCensusBefore2026Measure", value)} /> : <BooleanChoice label="¿Presentaste la declaración tributaria de 2025 exigida?" value={profile.required2025TaxReturnFiled} onChange={(value) => update("required2025TaxReturnFiled", value)} />}
+                <BooleanChoice locale={locale} label={pick(locale, "¿Realizarás efectivamente la actividad desde Ceuta?", "Will you effectively perform the activity from Ceuta?")} value={profile.activityPerformedInCeuta} onChange={(value) => update("activityPerformedInCeuta", value)} />
+                <BooleanChoice locale={locale} label={pick(locale, "¿Tendrás establecimiento o medios materiales en Ceuta?", "Will you have premises or material resources in Ceuta?")} value={profile.physicalEstablishmentInCeuta} onChange={(value) => update("physicalEstablishmentInCeuta", value)} />
+                <label>{pick(locale, "Lugar de trabajo", "Workplace")}<select value={profile.workplaceType ?? ""} onChange={(event) => update("workplaceType", event.target.value as BusinessProfileFacts["workplaceType"])}><option value="HOME_OFFICE">{pick(locale, "Domicilio / home office", "Home office")}</option><option value="OFFICE">{pick(locale, "Oficina", "Office")}</option><option value="COWORKING">Coworking</option><option value="OTHER">{pick(locale, "Otro", "Other")}</option></select></label>
+                <label>{pick(locale, "Empleados actuales", "Current employees")}<input type="number" min="0" value={profile.employeesNow ?? 0} onChange={(event) => update("employeesNow", Number(event.target.value))} /></label>
+                <label>{pick(locale, "Empleados previstos", "Planned employees")}<input type="number" min="0" value={profile.employeesPlanned ?? 0} onChange={(event) => update("employeesPlanned", Number(event.target.value))} /></label>
+                <label>{pick(locale, "Renta potencialmente obtenida en Ceuta", "Income potentially obtained in Ceuta")} <b className="range-value">{profile.qualifyingCeutaIncomePercentage ?? 0}%</b><input type="range" min="0" max="100" step="5" value={profile.qualifyingCeutaIncomePercentage ?? 0} onChange={(event) => update("qualifyingCeutaIncomePercentage", Number(event.target.value))} /><small>{pick(locale, "Es una hipótesis editable, no una validación automática.", "This is an editable assumption, not an automatic validation.")}</small></label>
+                <BooleanChoice locale={locale} label={pick(locale, "¿El sector figura entre los incluidos en la bonificación RETA?", "Is the sector included in the RETA relief?")} help={pick(locale, "Si no estás seguro, deja este punto para verificación profesional.", "If unsure, leave this point for professional verification.")} value={profile.coveredCeutaSocialSecuritySector} onChange={(value) => update("coveredCeutaSocialSecuritySector", value)} />
+                <BooleanChoice locale={locale} label={pick(locale, "¿Tuviste domicilio fiscal, establecimiento o inmueble afecto en Ceuta durante el período de referencia de 2026?", "Did you have a tax address, establishment or business property in Ceuta during the 2026 reference period?")} value={profile.ceutaPresenceDuring2026ReferencePeriod} onChange={(value) => update("ceutaPresenceDuring2026ReferencePeriod", value)} />
+                <BooleanChoice locale={locale} label={pick(locale, "¿La crisis migratoria declarada afectó negativamente a tu actividad?", "Did the declared migration crisis negatively affect your activity?")} help={pick(locale, "No se presume: debe declararse y poder justificarse.", "This is not presumed: it must be declared and supportable.")} value={profile.negativelyAffectedBy2026MigrationCrisis} onChange={(value) => update("negativelyAffectedBy2026MigrationCrisis", value)} />
+                {profile.newBusiness ? <BooleanChoice locale={locale} label={pick(locale, "¿Constabas de alta en el censo antes del 3 de septiembre de 2026?", "Were you registered in the tax census before 3 September 2026?")} value={profile.registeredInTaxCensusBefore2026Measure} onChange={(value) => update("registeredInTaxCensusBefore2026Measure", value)} /> : <BooleanChoice locale={locale} label={pick(locale, "¿Presentaste la declaración tributaria de 2025 exigida?", "Did you file the required 2025 tax return?")} value={profile.required2025TaxReturnFiled} onChange={(value) => update("required2025TaxReturnFiled", value)} />}
               </div>
             </>
           ) : null}
 
           {step === 3 ? (
             <>
-              <div className="section-heading"><div><p className="eyebrow">PASO 4 DE 4</p><h2>Resultado trazable</h2></div><span className="source-badge"><ShieldCheck size={15} /> {results.length + 3} reglas evaluadas</span></div>
+              <div className="section-heading"><div><p className="eyebrow">{pick(locale, "PASO 4 DE 4", "STEP 4 OF 4")}</p><h2>{pick(locale, "Resultado trazable", "Traceable result")}</h2></div><span className="source-badge"><ShieldCheck size={15} /> {results.length + 3} {pick(locale, "reglas evaluadas", "rules evaluated")}</span></div>
               <div className="result-summary">
-                <div><strong>{statusCounts.POTENTIALLY_ELIGIBLE + statusCounts.ELIGIBLE}</strong><span>potenciales</span></div>
-                <div><strong>{statusCounts.NEEDS_VERIFICATION}</strong><span>por completar</span></div>
-                <div><strong>{statusCounts.NOT_ELIGIBLE}</strong><span>no aplicables</span></div>
-                <div className="window-summary"><strong>{grant.windowStatus === "OPEN" ? "Abierta" : grant.windowStatus === "UPCOMING" ? "Próxima" : "Cerrada"}</strong><span>convocatoria de contratación</span></div>
+                <div><strong>{statusCounts.POTENTIALLY_ELIGIBLE + statusCounts.ELIGIBLE}</strong><span>{pick(locale, "potenciales", "potential")}</span></div>
+                <div><strong>{statusCounts.NEEDS_VERIFICATION}</strong><span>{pick(locale, "por completar", "to complete")}</span></div>
+                <div><strong>{statusCounts.NOT_ELIGIBLE}</strong><span>{pick(locale, "no aplicables", "not applicable")}</span></div>
+                <div className="window-summary"><strong>{grant.windowStatus === "OPEN" ? pick(locale, "Abierta", "Open") : grant.windowStatus === "UPCOMING" ? pick(locale, "Próxima", "Upcoming") : pick(locale, "Cerrada", "Closed")}</strong><span>{pick(locale, "convocatoria de contratación", "hiring call")}</span></div>
               </div>
               <div className="benefit-list">
                 {results.map((result) => (
                   <article className={`benefit-card status-${result.status.toLowerCase()}`} key={result.benefitId}>
-                    <div className="benefit-title"><div><span>{result.category === "TAX" ? "Fiscal" : "Seguridad Social"}</span><h3>{result.name}</h3></div><b>{statusCopy[result.status]}</b></div>
-                    {result.reasons.map((reason) => <p key={reason}>{reason}</p>)}
-                    {result.missingFacts.length ? <div className="missing-facts"><CircleHelp size={16} /><span><b>Falta confirmar:</b> {result.missingFacts.join(", ")}</span></div> : null}
-                    {result.warnings.map((warning) => <div className="result-warning" key={warning}><AlertTriangle size={15} /><span>{warning}</span></div>)}
-                    <footer><span>Reglas {result.ruleRefs.join(" · ")}</span><a href={sourceById.get(result.sourceIds[0])?.url} target="_blank" rel="noreferrer">Ver fuente oficial <ExternalLink size={13} /></a></footer>
+                    <div className="benefit-title"><div><span>{result.category === "TAX" ? pick(locale, "Fiscal", "Tax") : pick(locale, "Seguridad Social", "Social Security")}</span><h3>{localizeDomainText(locale, result.name)}</h3></div><b>{locale === "es" ? statusCopy[result.status] : englishStatusCopy[result.status]}</b></div>
+                    {result.reasons.map((reason) => <p key={reason}>{localizeDomainText(locale, reason)}</p>)}
+                    {result.missingFacts.length ? <div className="missing-facts"><CircleHelp size={16} /><span><b>{pick(locale, "Falta confirmar:", "To confirm:")}</b> {result.missingFacts.map((fact) => localizeDomainText(locale, fact)).join(", ")}</span></div> : null}
+                    {result.warnings.map((warning) => <div className="result-warning" key={warning}><AlertTriangle size={15} /><span>{localizeDomainText(locale, warning)}</span></div>)}
+                    <footer><span>{pick(locale, "Reglas", "Rules")} {result.ruleRefs.join(" · ")}</span><a href={sourceById.get(result.sourceIds[0])?.url} target="_blank" rel="noreferrer">{pick(locale, "Ver fuente oficial", "View official source")} <ExternalLink size={13} /></a></footer>
                   </article>
                 ))}
                 <article className={`benefit-card status-${reducedFee.status.toLowerCase()}`}>
-                  <div className="benefit-title"><div><span>Seguridad Social · Inicio de actividad</span><h3>Cuota reducida para nueva alta</h3></div><b>{statusCopy[reducedFee.status]}</b></div>
-                  {reducedFee.reasons.map((reason) => <p key={reason}>{reason}</p>)}
+                  <div className="benefit-title"><div><span>{pick(locale, "Seguridad Social · Inicio de actividad", "Social Security · Starting a business")}</span><h3>{pick(locale, "Cuota reducida para nueva alta", "Reduced fee for new registrations")}</h3></div><b>{locale === "es" ? statusCopy[reducedFee.status] : englishStatusCopy[reducedFee.status]}</b></div>
+                  {reducedFee.reasons.map((reason) => <p key={reason}>{localizeDomainText(locale, reason)}</p>)}
                   {reducedFee.missingFacts.length ? <div className="missing-facts"><CircleHelp size={16} /><span><b>Falta confirmar:</b> {reducedFee.missingFacts.join(", ")}</span></div> : null}
                   {reducedFee.warnings.map((warning) => <div className="result-warning" key={warning}><AlertTriangle size={15} /><span>{warning}</span></div>)}
-                  <footer><span>Reglas {reducedFee.ruleRefs.join(" · ")}</span><a href={sourceById.get("LETA-ART-38-TER")?.url} target="_blank" rel="noreferrer">Ver norma oficial <ExternalLink size={13} /></a></footer>
+                  <footer><span>{pick(locale, "Reglas", "Rules")} {reducedFee.ruleRefs.join(" · ")}</span><a href={sourceById.get("LETA-ART-38-TER")?.url} target="_blank" rel="noreferrer">{pick(locale, "Ver norma oficial", "View official rule")} <ExternalLink size={13} /></a></footer>
                 </article>
                 <article className={`benefit-card grant-card status-${directAid.status.toLowerCase()}`}>
                   <div className="benefit-title"><div><span>Ayuda estatal extraordinaria · AEAT</span><h3>Apoyo directo a empresas y profesionales de Ceuta</h3></div><b>{statusCopy[directAid.status]}</b></div>
@@ -205,8 +218,8 @@ export function EligibilityWorkspace({ profile, onProfileChange }: EligibilityWo
           ) : null}
 
           <footer className="wizard-actions">
-            <button type="button" className="back-button" disabled={step === 0} onClick={() => setStep((current) => Math.max(0, current - 1))}><ArrowLeft size={16} /> Anterior</button>
-            {step < steps.length - 1 ? <button type="button" className="primary-button" onClick={() => setStep((current) => Math.min(steps.length - 1, current + 1))}>Continuar <ArrowRight size={16} /></button> : <button type="button" className="primary-button" onClick={() => setStep(0)}>Editar respuestas</button>}
+            <button type="button" className="back-button" disabled={step === 0} onClick={() => setStep((current) => Math.max(0, current - 1))}><ArrowLeft size={16} /> {pick(locale, "Anterior", "Previous")}</button>
+            {step < steps[locale].length - 1 ? <button type="button" className="primary-button" onClick={() => setStep((current) => Math.min(steps[locale].length - 1, current + 1))}>{pick(locale, "Continuar", "Continue")} <ArrowRight size={16} /></button> : <button type="button" className="primary-button" onClick={() => setStep(0)}>{pick(locale, "Editar respuestas", "Edit answers")}</button>}
           </footer>
         </section>
       </div>

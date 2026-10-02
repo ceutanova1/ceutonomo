@@ -62,7 +62,7 @@ test("presenters can restore the seeded demo without losing interface preference
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Restore demo" }).click();
 
-  await expect(page.getByRole("textbox", { name: "Tarifa diaria" })).toHaveValue("300");
+  await expect(page.getByRole("textbox", { name: "Daily rate" })).toHaveValue("300");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect.poll(() => page.evaluate(() => ({
@@ -84,6 +84,17 @@ test("language, theme and ebook roadmap preferences are available", async ({ pag
   await page.getByRole("button", { name: "EN", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Your Ceuta business, explained euro by euro." })).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.getByText("Estimated annual net").first()).toBeVisible();
+  await page.getByRole("button", { name: "Eligibility" }).click();
+  await expect(page.getByRole("heading", { name: "Facts first. Benefits second." })).toBeVisible();
+  await page.getByRole("button", { name: "Benefits" }).click();
+  await expect(page.getByRole("heading", { name: "Only benefits that can be explained and evidenced." })).toBeVisible();
+  await page.getByRole("button", { name: "Grants" }).click();
+  await expect(page.getByRole("heading", { name: "Calls, deadlines and conditions before you act." })).toBeVisible();
+  await page.getByRole("button", { name: "Roadmap" }).click();
+  await expect(page.getByRole("heading", { name: "From a scenario to a documented decision." })).toBeVisible();
+  await page.getByRole("button", { name: "Sources" }).click();
+  await expect(page.getByRole("heading", { name: "Traceability is part of the result." })).toBeVisible();
   await page.getByRole("button", { name: "Dark theme" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.getByRole("button", { name: "Ebook", exact: true }).click();
