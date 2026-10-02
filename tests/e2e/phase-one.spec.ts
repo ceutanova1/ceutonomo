@@ -118,6 +118,7 @@ test("phase one views are functional and share eligibility state", async ({ page
 
 test("privacy and legal information are reachable from the demo", async ({ page }) => {
   await openReadyApp(page);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex, nofollow/);
   await page.getByRole("link", { name: "Privacidad", exact: true }).click();
   await expect(page).toHaveURL(/\/privacidad$/);
   await expect(page.getByRole("heading", { name: "Privacidad" })).toBeVisible();
@@ -129,6 +130,10 @@ test("privacy and legal information are reachable from the demo", async ({ page 
   await expect(page).toHaveURL(/\/legal$/);
   await expect(page.getByRole("heading", { name: "Aviso legal y condiciones de uso" })).toBeVisible();
   await expect(page.getByText("Los resultados son orientativos")).toBeVisible();
+
+  const robotsResponse = await page.request.get("/robots.txt");
+  expect(robotsResponse.ok()).toBe(true);
+  expect(await robotsResponse.text()).toContain("Disallow: /");
 });
 
 test("scenario exports include portable data and a real PDF", async ({ page }) => {

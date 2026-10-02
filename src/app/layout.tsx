@@ -17,6 +17,15 @@ export const metadata: Metadata = {
   title: "CEUTONOMO — Simulador empresarial de Ceuta",
   description:
     "Descubre beneficios, simula impuestos y decide cómo emprender en Ceuta con reglas oficiales trazables.",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

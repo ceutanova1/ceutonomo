@@ -51,6 +51,7 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Complete for demo readiness: consent-gated Google Analytics integration with no tracking before opt-in, no simulation values in events, a withdrawal control, and a disabled honest state until the measurement ID is configured.
 - Complete for demo readiness: confirmed one-action restoration of the seeded scenario while preserving language, theme and cookie preferences between guided demonstrations.
 - Complete for demo readiness: an eight-minute private-demo runbook with preflight values, compliant talking points, recovery steps and post-demo notes.
+- Complete for private-demo discoverability: page-level `noindex, nofollow` metadata and a site-wide crawler disallow rule. This is not access control; authenticated access remains an owner decision.
 - Pending before public production launch: assisted-technology review with representative users, final brand/legal approval, independent fiscal reviewer approval, and a decision on whether persistence/authentication remains deferred.
 
 ## Phase 2 — Structural decisions

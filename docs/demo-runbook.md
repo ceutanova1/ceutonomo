@@ -14,6 +14,8 @@ Esta guía permite presentar el producto de forma consistente sin convertir una 
 4. Confirma que el distintivo superior indica `DEMO PRIVADA` y que la verificación de reglas sigue en curso.
 5. Ten disponible el correo configurado para `Solicitar revisión` y evita usar datos personales reales durante la presentación.
 
+La aplicación solicita a los buscadores que no la indexen. Esta señal reduce su descubrimiento, pero no constituye autenticación ni impide que alguien con la URL acceda a la demo.
+
 Si cualquiera de estas comprobaciones falla, no improvises cifras: restaura la demo una vez y, si persiste, utiliza el PDF de muestra validado como apoyo visual.
 
 ## Recorrido recomendado — 8 minutos
@@ -70,4 +72,3 @@ Exporta el escenario en PDF y muestra la página de fuentes. Termina con `Solici
 ## Cierre y registro
 
 Después de la demo, anota la fecha, el tipo de participante, las dudas principales, los puntos que bloquearon la decisión y si se solicitó revisión profesional. No copies datos fiscales o personales introducidos durante una sesión sin autorización expresa.
-
