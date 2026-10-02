@@ -51,6 +51,26 @@ test("CEUTONOMO stores the anonymous scenario locally with explicit cookie choic
   await expect(page.getByRole("button", { name: "Analíticas próximamente" })).toBeDisabled();
 });
 
+test("presenters can restore the seeded demo without losing interface preferences", async ({ page }) => {
+  await openReadyApp(page);
+  await page.getByRole("button", { name: "Solo esenciales" }).click();
+  await page.getByRole("textbox", { name: "Tarifa diaria" }).fill("450");
+  await page.getByRole("button", { name: "Guardar en este dispositivo" }).click();
+  await page.getByRole("button", { name: "EN", exact: true }).click();
+  await page.getByRole("button", { name: "Dark theme" }).click();
+
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Restore demo" }).click();
+
+  await expect(page.getByRole("textbox", { name: "Tarifa diaria" })).toHaveValue("300");
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect.poll(() => page.evaluate(() => ({
+    scenario: window.localStorage.getItem("ceutaunomo-scenario-v1"),
+    cookies: window.localStorage.getItem("ceutonomo-cookie-preference-v2"),
+  }))).toEqual({ scenario: null, cookies: "ESSENTIAL" });
+});
+
 test("company comparison separates retained profit from personal net income", async ({ page }) => {
   await openReadyApp(page);
   await page.getByRole("button", { name: "Autónomo vs SL" }).click();

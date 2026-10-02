@@ -81,6 +81,8 @@ h3 { margin: 10px 0 5px; font-size: 1rem; }
 .year-pill, .secondary-button { border: 1px solid var(--line); background: var(--paper); border-radius: 8px; padding: 9px 12px; font-size: .78rem; font-weight: 700; }
 .secondary-button { cursor: pointer; color: var(--blue); }
 .save-button { display: inline-flex; align-items: center; gap: 6px; }
+.reset-demo-button { min-height: 32px; display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: var(--muted); cursor: pointer; font: inherit; font-size: .7rem; font-weight: 700; }
+.reset-demo-button:hover { color: var(--blue); }
 
 .status-strip {
   max-width: 1320px; margin: 0 auto 18px; min-height: 44px; padding: 10px 14px;
@@ -477,6 +479,7 @@ html[data-theme="dark"] {
 h1 { font-size: clamp(1.9rem, 2.7vw, 2.65rem); line-height: 1.15; font-weight: 620; text-wrap: balance; }
 .lede { max-width: 64ch; font-size: .92rem; }
 .header-actions { flex: 0 0 190px; align-content: flex-start; gap: 12px; }
+.header-actions .reset-demo-button { margin-left: auto; }
 .year-pill { background: transparent; border: 0; color: var(--muted); font-weight: 500; }
 .sidebar { background: linear-gradient(180deg, #102c3b, #081e2b); overflow-y: auto; }
 .sidebar-foot { padding-top: 24px; }
@@ -522,6 +525,7 @@ html[data-theme="dark"] .comparison-controls input:not([type="checkbox"]):not([t
   .workspace { padding-top: 18px; }
   .workspace-header { padding-bottom: 20px; }
   .header-actions { flex-basis: auto; align-items: center; justify-content: space-between; }
+  .header-actions .reset-demo-button { margin-left: 0; }
   .dashboard-kpis .kpi-featured { padding: 18px; }
   .dashboard-kpis .kpi-detail:last-child { grid-column: 1 / -1; }
   .mobile-preferences button { min-height: 44px; }

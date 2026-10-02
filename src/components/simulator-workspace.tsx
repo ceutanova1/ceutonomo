@@ -3,7 +3,7 @@
 import {
   AlertTriangle, BadgeEuro, BookOpenText, BriefcaseBusiness,
   BookMarked, Calculator, Check, ChevronDown, CircleHelp, FileCheck2, Landmark, Languages, LayoutDashboard,
-  MapPinned, Moon, ReceiptText, Scale, Send, ShieldCheck, Sparkles, Sun, TrendingUp, WalletCards,
+  MapPinned, Moon, ReceiptText, RotateCcw, Scale, Send, ShieldCheck, Sparkles, Sun, TrendingUp, WalletCards,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -138,6 +138,30 @@ export function SimulatorWorkspace() {
       profile,
     }));
     setSavedAt(timestamp);
+  };
+
+  const resetDemoScenario = () => {
+    const confirmed = window.confirm(locale === "es"
+      ? "¿Restaurar el escenario inicial de la demo? Se eliminará únicamente el escenario guardado; conservarás idioma, tema y preferencias de cookies."
+      : "Restore the initial demo scenario? Only the saved scenario will be removed; language, theme and cookie preferences will be kept.");
+    if (!confirmed) return;
+
+    window.localStorage.removeItem(SCENARIO_STORAGE_KEY);
+    setDailyRate("300");
+    setDays("21");
+    setMonths("12");
+    setRevenueMode("DERIVED");
+    setManualAnnualRevenue("75600");
+    setExpenses(seedExpenses.map((expense) => ({ ...expense })));
+    setClientSegments(seedClientSegments.map((segment) => ({ ...segment })));
+    setQualifyingCeutaPercentage("100");
+    setTaxpayerAge("35");
+    setResident(true);
+    setWorksInCeuta(true);
+    setSimplifiedDirectEstimation(true);
+    setDependentWorkerReduction(false);
+    setProfile({ ...demoBusinessProfile });
+    setSavedAt(null);
   };
 
   const updateProfile = (nextProfile: BusinessProfileFacts) => {
@@ -282,7 +306,7 @@ export function SimulatorWorkspace() {
         ) : <>
         <header className="workspace-header">
           <div><p className="eyebrow">CEUTONOMO · {locale === "es" ? "DEMO PRIVADA" : "PRIVATE DEMO"}</p><h1>{locale === "es" ? "Tu actividad en Ceuta, explicada euro a euro." : "Your Ceuta business, explained euro by euro."}</h1><p className="lede">{locale === "es" ? "Simula. Decide. Emprende con claridad. Solo mostramos como ahorro lo que puede trazarse a una regla oficial." : "Simulate. Decide. Start with clarity. We only show savings that can be traced to an official rule."}</p></div>
-          <div className="header-actions"><span className="year-pill">{locale === "es" ? "Ejercicio" : "Tax year"} 2026</span><button type="button" className="secondary-button save-button" onClick={saveScenario}>{savedAt ? <Check size={15} /> : null}{savedAt ? (locale === "es" ? "Escenario guardado" : "Scenario saved") : (locale === "es" ? "Guardar en este dispositivo" : "Save on this device")}</button></div>
+          <div className="header-actions"><span className="year-pill">{locale === "es" ? "Ejercicio" : "Tax year"} 2026</span><button type="button" className="secondary-button save-button" onClick={saveScenario}>{savedAt ? <Check size={15} /> : null}{savedAt ? (locale === "es" ? "Escenario guardado" : "Scenario saved") : (locale === "es" ? "Guardar en este dispositivo" : "Save on this device")}</button><button type="button" className="reset-demo-button" onClick={resetDemoScenario}><RotateCcw aria-hidden="true" size={14} />{locale === "es" ? "Restaurar demo" : "Restore demo"}</button></div>
         </header>
 
         <section className="status-strip" aria-label="Estado de verificación">
