@@ -45,7 +45,8 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Security note: `npm audit --omit=dev` currently reports four high-severity advisories in Prisma 7.10 transitive tooling (`deepmerge-ts` and `mysql2`). The offered automatic fix downgrades Prisma to 6 and is therefore not applied without a planned migration. Recheck upstream before deployment and do not expose Prisma CLI tooling in the runtime image.
 - Complete: CI quality workflow for lint, deterministic tests, production build, and browser journeys on pushes and pull requests.
 - Complete for the private demo: linked privacy information, legal/demo limitations, local-storage disclosure, and the contact-a-gestor handoff. Final legal wording and business identification still require owner/legal approval before commercial launch.
-- Pending before public production launch: formal accessibility audit, final brand/legal approval, independent fiscal reviewer approval, and a decision on whether persistence/authentication remains deferred.
+- Complete: automated WCAG 2.1 A/AA checks for the dashboard, eligibility flow, dark theme, legal pages and the keyboard skip-link path on desktop and mobile.
+- Pending before public production launch: assisted-technology review with representative users, final brand/legal approval, independent fiscal reviewer approval, and a decision on whether persistence/authentication remains deferred.
 
 ## Phase 2 — Structural decisions
 
@@ -71,6 +72,6 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 
 ## Immediate implementation order
 
-1. Complete the formal accessibility review and keyboard walkthrough.
+1. Complete the assisted-technology review with representative users.
 2. Obtain fiscal review of the published 2026 ruleset.
 3. Confirm final brand/legal wording and whether persistence/authentication remains deferred before public launch.

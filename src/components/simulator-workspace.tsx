@@ -234,6 +234,7 @@ export function SimulatorWorkspace() {
 
   return (
     <div className="app-shell" data-interface-ready={interfaceReady ? "true" : "false"}>
+      <a className="skip-link" href="#main-content">{locale === "es" ? "Saltar al contenido" : "Skip to content"}</a>
       <aside className="sidebar">
         <div className="brand-mark"><BrandLogo /></div>
         <nav aria-label={locale === "es" ? "Navegación principal" : "Main navigation"}>
@@ -256,7 +257,7 @@ export function SimulatorWorkspace() {
         </div>
       </aside>
 
-      <main className="workspace">
+      <main className="workspace" id="main-content" tabIndex={-1}>
         <div className="mobile-preferences">
           <button type="button" onClick={() => changeLocale(locale === "es" ? "en" : "es")}><Languages size={15} /> {locale === "es" ? "EN" : "ES"}</button>
           <button type="button" aria-label={locale === "es" ? (theme === "light" ? "Tema oscuro" : "Tema claro") : (theme === "light" ? "Dark theme" : "Light theme")} onClick={() => changeTheme(theme === "light" ? "dark" : "light")}>{theme === "light" ? <Moon size={15} /> : <Sun size={15} />}</button>
@@ -354,7 +355,7 @@ export function SimulatorWorkspace() {
           </div>
         </section>
 
-        <section className="warning-panel"><AlertTriangle aria-hidden="true" size={20} /><div><b>Antes de darte de alta o comprar equipo</b><p>No hemos verificado una convocatoria PROCESA de autoempleo activa en 2026. Confirma si la solicitud debe presentarse antes del alta, la inversión o el inicio de actividad.</p></div><button>Ver ayudas</button></section>
+        <section className="warning-panel"><AlertTriangle aria-hidden="true" size={20} /><div><b>Antes de darte de alta o comprar equipo</b><p>No hemos verificado una convocatoria PROCESA de autoempleo activa en 2026. Confirma si la solicitud debe presentarse antes del alta, la inversión o el inicio de actividad.</p></div><button type="button" onClick={() => setActiveView("Ayudas")}>Ver ayudas</button></section>
         <section className="advisor-cta" aria-labelledby="advisor-title"><div><p className="eyebrow">SIGUIENTE PASO</p><h2 id="advisor-title">¿Tu simulación encaja contigo?</h2><p>Envía el resumen a un gestor para revisar los hechos, las compatibilidades y la documentación antes de tomar decisiones.</p></div><a className="primary-button" href="mailto:medalibenali2@gmail.com?subject=Consulta%20CEUTONOMO%20%E2%80%94%20revisi%C3%B3n%20de%20simulaci%C3%B3n&body=Hola%2C%20he%20completado%20una%20simulaci%C3%B3n%20en%20CEUTONOMO%20y%20quiero%20revisarla%20con%20un%20gestor."><Send size={16} /> Solicitar revisión</a></section>
         <footer className="disclaimer">Este simulador ofrece estimaciones informativas según el ejercicio y las reglas verificadas. No sustituye el asesoramiento de la Agencia Tributaria, Seguridad Social, PROCESA o un asesor fiscal cualificado.</footer>
         </>}

@@ -57,7 +57,7 @@ export function PhaseOneViews({ view, profile, annualRevenueCents, annualNetCent
       </div>
       <div className="phase-action-panel">
         <div><p className="eyebrow">DATOS COMPARTIDOS</p><h2>Perfil económico y diagnóstico sincronizados</h2><p>Edad: {profile.age ?? "pendiente"} · Residencia en Ceuta: {profile.residentInCeuta ? "sí" : "no"} · Actividad desde Ceuta: {profile.activityPerformedInCeuta ? "sí" : "no"} · Renta calificable: {profile.qualifyingCeutaIncomePercentage ?? 0}%</p></div>
-        <div className="phase-actions"><button className="secondary-button" onClick={() => onNavigate("Dashboard")}>Editar importes</button><button className="primary-button" onClick={() => onNavigate("Elegibilidad")}>Editar diagnóstico <ArrowRight size={15} /></button></div>
+        <div className="phase-actions"><button type="button" className="secondary-button" onClick={() => onNavigate("Dashboard")}>Editar importes</button><button type="button" className="primary-button" onClick={() => onNavigate("Elegibilidad")}>Editar diagnóstico <ArrowRight size={15} /></button></div>
       </div>
     </section>
   );
@@ -102,7 +102,7 @@ export function PhaseOneViews({ view, profile, annualRevenueCents, annualNetCent
   return (
     <section className="phase-workspace">
       <ViewHeader eyebrow="HOJA DE RUTA PERSONAL" title="Del escenario a una decisión documentada." description="Los pasos se construyen con los datos actuales del diagnóstico y la simulación. Las acciones pendientes permanecen visibles hasta su validación." icon={<MapPinned />} />
-      <div className="roadmap-list">{roadmap.map((item, index) => <article key={item.title} className={item.done ? "complete" : "pending"}><span className="roadmap-number">{item.done ? <Check size={18} /> : index + 1}</span><div><small>{item.done ? "COMPLETADO" : "SIGUIENTE PASO"}</small><h2>{item.title}</h2><p>{item.detail}</p></div><button className="secondary-button" onClick={() => onNavigate(item.action)}>Abrir <ArrowRight size={14} /></button></article>)}</div>
+      <div className="roadmap-list">{roadmap.map((item, index) => <article key={item.title} className={item.done ? "complete" : "pending"}><span className="roadmap-number">{item.done ? <Check aria-hidden="true" size={18} /> : index + 1}</span><div><small>{item.done ? "COMPLETADO" : "SIGUIENTE PASO"}</small><h2>{item.title}</h2><p>{item.detail}</p></div><button type="button" className="secondary-button" onClick={() => onNavigate(item.action)}>Abrir <ArrowRight aria-hidden="true" size={14} /></button></article>)}</div>
       <div className="roadmap-note"><CalendarClock size={19} /><p>Las fechas y reglas pertenecen al ejercicio 2026. Antes del lanzamiento público o de ejecutar una acción, revisa que la fuente siga vigente.</p></div>
     </section>
   );
