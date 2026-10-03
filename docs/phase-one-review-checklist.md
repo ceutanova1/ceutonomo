@@ -40,6 +40,8 @@ The fiscal reviewer should record `Approved`, `Changes required`, or `Not review
 
 ## Source freshness
 
+Run `npm run test:sources` before a review session to check that every registered official URL is technically reachable. A passing result proves availability only; it does not confirm legal interpretation, effective dates or the absence of later amendments.
+
 For each source shown in the in-product register:
 
 - [ ] The URL is reachable.
