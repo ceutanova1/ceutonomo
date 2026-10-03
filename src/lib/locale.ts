@@ -8,6 +8,7 @@ const englishDomainText: Readonly<Record<string, string>> = {
   "PROCESA · Contratación indefinida FSE+": "PROCESA · Permanent hiring FSE+",
   "El perfil declara residencia y actividad efectiva en Ceuta, con renta general identificada como potencialmente calificable.": "The profile declares effective residence and activity in Ceuta, with general income identified as potentially qualifying.",
   "Los hechos declarados encajan en las condiciones generales publicadas para la bonificación.": "The declared facts match the published general conditions for the relief.",
+  "Los hechos declarados encajan en las condiciones generales publicadas por la Seguridad Social.": "The declared facts match the general conditions published by Social Security.",
   "La procedencia de cada renta y la cuota atribuible deben acreditarse; residir en Ceuta no califica automáticamente todos los ingresos.": "The source of each income item and the attributable tax must be evidenced; living in Ceuta does not automatically qualify all income.",
   "La bonificación es del 50% hasta septiembre y del 75% para cuotas devengadas desde octubre de 2026. Confirma la compatibilidad con cuota reducida u otros incentivos.": "The relief is 50% through September and 75% for contributions accrued from October 2026. Confirm compatibility with the reduced fee and other incentives.",
   "La simulación publicada está limitada a contribuyentes del IRPF español.": "The published simulation is limited to Spanish personal income tax taxpayers.",
@@ -51,6 +52,8 @@ const englishDomainText: Readonly<Record<string, string>> = {
   "El perfil y la contratación declarada encajan preliminarmente en la convocatoria.": "The profile and declared hire preliminarily match the call.",
   "La concesión es competitiva y depende de puntuación y crédito disponible.": "The award is competitive and depends on scoring and available funding.",
   "Presenta la solicitud antes de formalizar la contratación: una contratación anterior no es subvencionable en esta ventana.": "Submit the application before formalizing the hire: an earlier hire is not eligible in this window.",
+  "50% × 9 meses · 75% × 3 meses": "50% × 9 months · 75% × 3 months",
+  "No se proyectan importes usando reglas de otro ejercicio.": "No amounts are projected using rules from another tax year.",
 };
 
 export const localizeDomainText = (locale: AppLocale, value: string): string => {

@@ -187,33 +187,33 @@ export function EligibilityWorkspace({ locale, profile, onProfileChange }: Eligi
                 <article className={`benefit-card status-${reducedFee.status.toLowerCase()}`}>
                   <div className="benefit-title"><div><span>{pick(locale, "Seguridad Social · Inicio de actividad", "Social Security · Starting a business")}</span><h3>{pick(locale, "Cuota reducida para nueva alta", "Reduced fee for new registrations")}</h3></div><b>{locale === "es" ? statusCopy[reducedFee.status] : englishStatusCopy[reducedFee.status]}</b></div>
                   {reducedFee.reasons.map((reason) => <p key={reason}>{localizeDomainText(locale, reason)}</p>)}
-                  {reducedFee.missingFacts.length ? <div className="missing-facts"><CircleHelp size={16} /><span><b>Falta confirmar:</b> {reducedFee.missingFacts.join(", ")}</span></div> : null}
-                  {reducedFee.warnings.map((warning) => <div className="result-warning" key={warning}><AlertTriangle size={15} /><span>{warning}</span></div>)}
+                  {reducedFee.missingFacts.length ? <div className="missing-facts"><CircleHelp size={16} /><span><b>{pick(locale, "Falta confirmar:", "To confirm:")}</b> {reducedFee.missingFacts.map((fact) => localizeDomainText(locale, fact)).join(", ")}</span></div> : null}
+                  {reducedFee.warnings.map((warning) => <div className="result-warning" key={warning}><AlertTriangle size={15} /><span>{localizeDomainText(locale, warning)}</span></div>)}
                   <footer><span>{pick(locale, "Reglas", "Rules")} {reducedFee.ruleRefs.join(" · ")}</span><a href={sourceById.get("LETA-ART-38-TER")?.url} target="_blank" rel="noreferrer">{pick(locale, "Ver norma oficial", "View official rule")} <ExternalLink size={13} /></a></footer>
                 </article>
                 <article className={`benefit-card grant-card status-${directAid.status.toLowerCase()}`}>
-                  <div className="benefit-title"><div><span>Ayuda estatal extraordinaria · AEAT</span><h3>Apoyo directo a empresas y profesionales de Ceuta</h3></div><b>{statusCopy[directAid.status]}</b></div>
-                  {directAid.reasons.map((reason) => <p key={reason}>{reason}</p>)}
-                  <dl className="grant-facts"><div><dt>Importe orientativo</dt><dd>{directAid.amountEuro ? `${directAid.amountEuro.toLocaleString("es-ES")} €` : "Según forma jurídica y volumen"}</dd></div><div><dt>Solicitud</dt><dd>Hasta el 30 de noviembre de 2026</dd></div><div><dt>Tributación</dt><dd>Exenta de IRPF / IS</dd></div></dl>
-                  {directAid.missingFacts.length ? <div className="missing-facts"><CircleHelp size={16} /><span><b>Falta confirmar:</b> {directAid.missingFacts.join(", ")}</span></div> : null}
-                  {directAid.warnings.map((warning) => <div className="result-warning" key={warning}><AlertTriangle size={15} /><span>{warning}</span></div>)}
-                  <footer><span>Regla {directAid.ruleRefs.join(" · ")}</span><a href={sourceById.get("AEAT-GC70-CEUTA-2026")?.url} target="_blank" rel="noreferrer">Solicitar / ver procedimiento <ExternalLink size={13} /></a></footer>
+                  <div className="benefit-title"><div><span>{pick(locale, "Ayuda estatal extraordinaria · AEAT", "Extraordinary state aid · AEAT")}</span><h3>{pick(locale, "Apoyo directo a empresas y profesionales de Ceuta", "Direct support for Ceuta businesses and professionals")}</h3></div><b>{locale === "es" ? statusCopy[directAid.status] : englishStatusCopy[directAid.status]}</b></div>
+                  {directAid.reasons.map((reason) => <p key={reason}>{localizeDomainText(locale, reason)}</p>)}
+                  <dl className="grant-facts"><div><dt>{pick(locale, "Importe orientativo", "Indicative amount")}</dt><dd>{directAid.amountEuro ? `${directAid.amountEuro.toLocaleString(locale === "es" ? "es-ES" : "en-GB")} €` : pick(locale, "Según forma jurídica y volumen", "Depends on legal form and turnover")}</dd></div><div><dt>{pick(locale, "Solicitud", "Application")}</dt><dd>{pick(locale, "Hasta el 30 de noviembre de 2026", "Until 30 November 2026")}</dd></div><div><dt>{pick(locale, "Tributación", "Tax treatment")}</dt><dd>{pick(locale, "Exenta de IRPF / IS", "Exempt from personal / corporate income tax")}</dd></div></dl>
+                  {directAid.missingFacts.length ? <div className="missing-facts"><CircleHelp size={16} /><span><b>{pick(locale, "Falta confirmar:", "To confirm:")}</b> {directAid.missingFacts.map((fact) => localizeDomainText(locale, fact)).join(", ")}</span></div> : null}
+                  {directAid.warnings.map((warning) => <div className="result-warning" key={warning}><AlertTriangle size={15} /><span>{localizeDomainText(locale, warning)}</span></div>)}
+                  <footer><span>{pick(locale, "Regla", "Rule")} {directAid.ruleRefs.join(" · ")}</span><a href={sourceById.get("AEAT-GC70-CEUTA-2026")?.url} target="_blank" rel="noreferrer">{pick(locale, "Solicitar / ver procedimiento", "Apply / view procedure")} <ExternalLink size={13} /></a></footer>
                 </article>
                 <article className={`benefit-card grant-card status-${grant.status.toLowerCase()}`}>
-                  <div className="benefit-title"><div><span>Ayuda · {grant.windowStatus === "OPEN" ? "Convocatoria abierta" : grant.windowStatus === "UPCOMING" ? "Próxima convocatoria" : "Convocatorias cerradas"}</span><h3>{grant.name}</h3></div><b>{statusCopy[grant.status]}</b></div>
-                  {grant.reasons.map((reason) => <p key={reason}>{reason}</p>)}
+                  <div className="benefit-title"><div><span>{pick(locale, "Ayuda", "Grant")} · {grant.windowStatus === "OPEN" ? pick(locale, "Convocatoria abierta", "Open call") : grant.windowStatus === "UPCOMING" ? pick(locale, "Próxima convocatoria", "Upcoming call") : pick(locale, "Convocatorias cerradas", "Calls closed")}</span><h3>{localizeDomainText(locale, grant.name)}</h3></div><b>{locale === "es" ? statusCopy[grant.status] : englishStatusCopy[grant.status]}</b></div>
+                  {grant.reasons.map((reason) => <p key={reason}>{localizeDomainText(locale, reason)}</p>)}
                   <dl className="grant-facts">
                     <div><dt>Importe</dt><dd>{procesaIndefiniteHiring2026.amountLabel}</dd></div>
                     <div><dt>Ventana</dt><dd>{grant.activeWindow ? `Hasta ${new Intl.DateTimeFormat("es-ES", { dateStyle: "long", timeStyle: "short", timeZone: "Europe/Madrid" }).format(new Date(grant.activeWindow.closesAt))}` : grant.nextWindow ? `Abre ${new Intl.DateTimeFormat("es-ES", { dateStyle: "long", timeZone: "Europe/Madrid" }).format(new Date(grant.nextWindow.opensAt))}` : "Sin ventana 2026 abierta"}</dd></div>
                     <div><dt>Mantenimiento</dt><dd>{procesaIndefiniteHiring2026.maintenancePeriod}</dd></div>
                   </dl>
-                  {grant.missingFacts.length ? <div className="missing-facts"><CircleHelp size={16} /><span><b>Falta confirmar:</b> {grant.missingFacts.join(", ")}</span></div> : null}
-                  {grant.warnings.map((warning) => <div className="result-warning" key={warning}><AlertTriangle size={15} /><span>{warning}</span></div>)}
-                  <details className="document-list"><summary>Documentación indicada</summary><ul>{procesaIndefiniteHiring2026.requiredDocuments.map((document) => <li key={document}>{document}</li>)}</ul></details>
-                  <footer><span>Verificada el 28/09/2026</span><a href={sourceById.get(grant.sourceIds[0])?.url} target="_blank" rel="noreferrer">Ver convocatoria oficial <ExternalLink size={13} /></a></footer>
+                  {grant.missingFacts.length ? <div className="missing-facts"><CircleHelp size={16} /><span><b>{pick(locale, "Falta confirmar:", "To confirm:")}</b> {grant.missingFacts.map((fact) => localizeDomainText(locale, fact)).join(", ")}</span></div> : null}
+                  {grant.warnings.map((warning) => <div className="result-warning" key={warning}><AlertTriangle size={15} /><span>{localizeDomainText(locale, warning)}</span></div>)}
+                  <details className="document-list"><summary>{pick(locale, "Documentación indicada", "Required documentation")}</summary><ul>{procesaIndefiniteHiring2026.requiredDocuments.map((document) => <li key={document}>{document}</li>)}</ul></details>
+                  <footer><span>{pick(locale, "Verificada el 28/09/2026", "Verified on 28/09/2026")}</span><a href={sourceById.get(grant.sourceIds[0])?.url} target="_blank" rel="noreferrer">{pick(locale, "Ver convocatoria oficial", "View official call")} <ExternalLink size={13} /></a></footer>
                 </article>
               </div>
-              <div className="grant-hold"><AlertTriangle size={18} /><div><b>Autoempleo: sin convocatoria 2026 verificada</b><p>La página oficial de autoempleo consultada sigue mostrando ventanas de 2022. No se traslada ese importe ni esas fechas a 2026.</p></div></div>
+              <div className="grant-hold"><AlertTriangle size={18} /><div><b>{pick(locale, "Autoempleo: sin convocatoria 2026 verificada", "Self-employment: no verified 2026 call")}</b><p>{pick(locale, "La página oficial de autoempleo consultada sigue mostrando ventanas de 2022. No se traslada ese importe ni esas fechas a 2026.", "The official self-employment page still shows 2022 windows. Those amounts and dates are not carried forward to 2026.")}</p></div></div>
             </>
           ) : null}
 
