@@ -73,4 +73,4 @@ Exporta el escenario en PDF y muestra la página de fuentes. Termina con `Solici
 
 ## Cierre y registro
 
-Después de la demo, anota la fecha, el tipo de participante, las dudas principales, los puntos que bloquearon la decisión y si se solicitó revisión profesional. No copies datos fiscales o personales introducidos durante una sesión sin autorización expresa.
+Después de la demo, crea una copia de [`docs/demo-feedback-template.md`](./demo-feedback-template.md) y registra la fecha, el tipo de participante, las dudas principales, los puntos que bloquearon la decisión y si se solicitó revisión profesional. No copies datos fiscales o personales introducidos durante una sesión sin autorización expresa.
