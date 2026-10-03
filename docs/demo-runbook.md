@@ -4,6 +4,8 @@ Esta guía permite presentar el producto de forma consistente sin convertir una 
 
 ## Preparación — 2 minutos
 
+Antes de una sesión importante, ejecuta `npm run test:production`. Este preflight de solo lectura comprueba la URL pública, las cifras iniciales, la navegación español/inglés y las protecciones de la demo privada. Si falla, revisa el despliegue antes de invitar al participante.
+
 1. Abre <https://ceutonomo.vercel.app> en una ventana privada.
 2. Selecciona `Solo esenciales`. La opción de analítica debe aparecer desactivada mientras no exista un identificador de Google Analytics configurado.
 3. Pulsa `Restaurar demo` y confirma. El escenario inicial debe mostrar:
