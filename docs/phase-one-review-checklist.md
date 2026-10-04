@@ -66,6 +66,7 @@ Engineering evidence currently covers automated WCAG 2.1 A/AA checks, keyboard s
 
 Human validation still required:
 
+- [ ] Run the structured first-time-user protocol in `docs/first-time-user-readability-test.md` and meet every stated threshold.
 - [ ] Complete the principal journey with keyboard only.
 - [ ] Complete the principal journey with VoiceOver or NVDA.
 - [ ] Check zoom at 200% and text spacing overrides.
@@ -80,5 +81,7 @@ Human validation still required:
 | Fiscal reviewer | — | Pending | — | — |
 | Legal/privacy reviewer | — | Pending | — | — |
 | Accessibility reviewer | — | Pending | — | — |
+
+Attach anonymized session records or a consolidated findings document to this checklist before changing the accessibility or product-owner decision from `Pending`.
 
 Phase 1 is approved for wider release only when all required reviewers have recorded a decision and every `Changes required` item has a linked follow-up.

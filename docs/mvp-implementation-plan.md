@@ -39,6 +39,7 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Complete: connected Phase 1 navigation. Eligibility facts now share state with the economic simulator, benefit results, verified grants, personalized roadmap, and official-source register.
 - Complete: functional Simulador, Beneficios, Ayudas, Hoja de ruta, and Fuentes views on desktop and mobile; no Phase 1 navigation item remains a placeholder.
 - Complete: premium UI/readability pass with a clearly labelled editable example, visible starting assumptions, calmer information hierarchy, stronger supporting-text sizing, and light/dark responsive coverage.
+- Complete: a Spanish-first first-time-user readability protocol with representative coverage, five task scenarios, privacy-safe recording rules, measurable success thresholds, and an explicit retest gate.
 - Partial: reduced-fee personal eligibility and request timing are modeled. The 2026 amount and compatibility/priority against the Ceuta bonus remain `NEEDS_VERIFICATION` because the official sources inspected do not publish those parameters.
 - Complete: dated fifth/sixth 2026 PROCESA indefinite-hiring windows, amount bands, apply-before-hire warning, source links, and current-window evaluation.
 - Pending: any additional individually verified PROCESA calls, full grant application workflow, and personalized roadmap. The autoemployment page remains limited to 2022 calls and is intentionally disabled for 2026.
@@ -83,4 +84,4 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 1. Complete the assisted-technology review with representative users.
 2. Obtain fiscal review of the published 2026 ruleset.
 3. Confirm final brand/legal wording and whether persistence/authentication remains deferred before public launch.
-4. Validate the clarified example and premium readability pass with representative first-time users in Spanish and English.
+4. Run `docs/first-time-user-readability-test.md` with representative first-time users in Spanish and English; validation remains pending until every threshold is met.
