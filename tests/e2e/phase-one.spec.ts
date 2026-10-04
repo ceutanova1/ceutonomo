@@ -9,6 +9,8 @@ const openReadyApp = async (page: Page) => {
 test("dashboard reconciles the seeded Ceuta autónomo scenario", async ({ page }) => {
   await openReadyApp(page);
   await expect(page.getByRole("heading", { name: "Tu actividad en Ceuta, explicada euro a euro." })).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "Ejemplo editable" })).toContainText("Cambia un dato");
+  await expect(page.getByRole("complementary", { name: "Ejemplo editable" })).toContainText("300 €");
   const summary = page.getByRole("region", { name: "Resumen económico del escenario" });
   await expect(summary).toContainText("75.600");
   await expect(summary).toContainText("61.002");

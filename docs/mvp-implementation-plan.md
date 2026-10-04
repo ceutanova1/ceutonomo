@@ -25,7 +25,7 @@ Exit: architecture builds, rule fixtures validate, and core money/revenue tests 
 
 Exit: the seeded demo produces a fully sourced, reconcilable result or explicitly reports which official 2026 parameter is still missing. No placeholder result is shown.
 
-### Current implementation status — 2026-09-28
+### Current implementation status — 2026-10-04
 
 - Complete: editable personal/business/implantation onboarding with explicit unknown-fact handling.
 - Complete: revenue, deductible-expense, 2026 RETA and general IRPF calculations for the documented Phase 1 scope.
@@ -38,6 +38,7 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 - Complete: dashboard separating net annual/monthly cash, recurring IRPF savings, recurring Social Security savings, and one-time potential aid. Unverified aid is never added to the recurring total.
 - Complete: connected Phase 1 navigation. Eligibility facts now share state with the economic simulator, benefit results, verified grants, personalized roadmap, and official-source register.
 - Complete: functional Simulador, Beneficios, Ayudas, Hoja de ruta, and Fuentes views on desktop and mobile; no Phase 1 navigation item remains a placeholder.
+- Complete: premium UI/readability pass with a clearly labelled editable example, visible starting assumptions, calmer information hierarchy, stronger supporting-text sizing, and light/dark responsive coverage.
 - Partial: reduced-fee personal eligibility and request timing are modeled. The 2026 amount and compatibility/priority against the Ceuta bonus remain `NEEDS_VERIFICATION` because the official sources inspected do not publish those parameters.
 - Complete: dated fifth/sixth 2026 PROCESA indefinite-hiring windows, amount bands, apply-before-hire warning, source links, and current-window evaluation.
 - Pending: any additional individually verified PROCESA calls, full grant application workflow, and personalized roadmap. The autoemployment page remains limited to 2022 calls and is intentionally disabled for 2026.
@@ -82,3 +83,4 @@ Exit: the seeded demo produces a fully sourced, reconcilable result or explicitl
 1. Complete the assisted-technology review with representative users.
 2. Obtain fiscal review of the published 2026 ruleset.
 3. Confirm final brand/legal wording and whether persistence/authentication remains deferred before public launch.
+4. Validate the clarified example and premium readability pass with representative first-time users in Spanish and English.

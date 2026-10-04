@@ -328,6 +328,19 @@ export function SimulatorWorkspace() {
         <div className="work-grid">
           <section className="input-panel" aria-labelledby="scenario-title">
             <div className="section-heading"><div><p className="eyebrow">{pick(locale, "ESCENARIO DEMO", "DEMO SCENARIO")}</p><h2 id="scenario-title">{pick(locale, "Desarrollador / consultor IT", "Software developer / IT consultant")}</h2></div><button className="icon-button" aria-label={pick(locale, "Más opciones del escenario", "More scenario options")}><ChevronDown size={18} /></button></div>
+            <aside className="example-callout" aria-label={pick(locale, "Ejemplo editable", "Editable example")}>
+              <div className="example-callout-copy">
+                <span><Sparkles aria-hidden="true" size={16} /> {pick(locale, "EJEMPLO EDITABLE", "EDITABLE EXAMPLE")}</span>
+                <p>{pick(locale, "Un consultor digital que trabaja desde Ceuta. Cambia un dato y observa cómo afecta al resultado; no es una recomendación personal.", "A digital consultant working from Ceuta. Change one value and see how it affects the result; this is not personal advice.")}</p>
+              </div>
+              <div className="example-assumptions" aria-label={pick(locale, "Hipótesis actuales del ejemplo", "Current example assumptions")}>
+                {revenueMode === "DERIVED" ? <>
+                  <span><b>{dailyRate} €</b>{pick(locale, "por día", "per day")}</span>
+                  <span><b>{days}</b>{pick(locale, "días al mes", "days per month")}</span>
+                  <span><b>{months}</b>{pick(locale, "meses", "months")}</span>
+                </> : <span><b>{manualAnnualRevenue} €</b>{pick(locale, "ingreso anual", "annual revenue")}</span>}
+              </div>
+            </aside>
             <div className="mode-switch" aria-label={pick(locale, "Método de cálculo de ingresos", "Revenue calculation method")}>
               <button type="button" className={revenueMode === "DERIVED" ? "selected" : ""} onClick={() => setRevenueMode("DERIVED")}>{pick(locale, "Tarifa × actividad", "Rate × activity")}</button>
               <button type="button" className={revenueMode === "MANUAL" ? "selected" : ""} onClick={() => setRevenueMode("MANUAL")}>{pick(locale, "Ingresos anuales", "Annual revenue")}</button>

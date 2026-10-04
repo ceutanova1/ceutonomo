@@ -25,6 +25,10 @@ body {
   background: var(--canvas);
   color: var(--ink);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 button, input, select, textarea { font: inherit; }
 button { color: inherit; }
@@ -583,6 +587,34 @@ html[data-theme="dark"] .comparison-controls input:not([type="checkbox"]):not([t
 .roadmap-note { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; padding: 15px; border-radius: 12px; background: var(--blue-soft); color: var(--blue); }
 .roadmap-note p { margin: 0; font-size: .74rem; line-height: 1.55; }
 html[data-theme="dark"] .status-chip.status-not_eligible { background: #351d22; }
+
+/* Premium clarity pass: make the seeded case unmistakably editable and easier to scan. */
+.example-callout {
+  margin-top: 20px;
+  padding: 17px 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 13px;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--blue) 22%, var(--line));
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--green-soft) 70%, transparent), transparent 56%),
+    var(--blue-soft);
+}
+.example-callout-copy > span { display: inline-flex; align-items: center; gap: 7px; color: var(--blue); font-size: .7rem; font-weight: 850; letter-spacing: .11em; }
+.example-callout-copy p { max-width: 58ch; margin: 7px 0 0; color: var(--ink); font-size: .84rem; line-height: 1.6; }
+.example-assumptions { display: flex; gap: 7px; flex-wrap: wrap; justify-content: flex-start; }
+.example-assumptions span { min-width: 86px; padding: 9px 11px; display: grid; gap: 1px; border: 1px solid color-mix(in srgb, var(--blue) 15%, var(--line)); border-radius: 10px; background: color-mix(in srgb, var(--paper) 88%, transparent); color: var(--muted); font-size: .66rem; line-height: 1.35; }
+.example-assumptions b { color: var(--ink); font-size: .86rem; font-variant-numeric: tabular-nums; }
+.mode-switch { margin-top: 16px; }
+.benefit-card > p, .phase-card > p, .roadmap-list p, .roadmap-note p, .source-register p, .source-register small { font-size: .8rem; line-height: 1.65; }
+.missing-facts, .result-warning { font-size: .76rem; line-height: 1.55; }
+.benefit-card footer, .phase-source-link, .source-meta a { font-size: .74rem; }
+.phase-metric small, .phase-metric span { font-size: .78rem; }
+.status-chip { font-size: .7rem; }
+html[data-theme="dark"] .example-callout { border-color: #315365; background: radial-gradient(circle at top right, #12372f, transparent 58%), #102a3a; }
+html[data-theme="dark"] .example-assumptions span { background: rgba(7, 20, 30, .48); border-color: #315365; }
 @media (max-width: 700px) {
   .phase-header-icon { display: none; }
   .phase-summary-grid, .grant-overview-grid, .phase-card-list { grid-template-columns: 1fr; }
@@ -592,4 +624,7 @@ html[data-theme="dark"] .status-chip.status-not_eligible { background: #351d22; 
   .source-meta { justify-items: start; text-align: left; }
   .roadmap-list article { grid-template-columns: auto 1fr; }
   .roadmap-list button { grid-column: 2; justify-self: start; }
+  .example-callout { grid-template-columns: 1fr; padding: 16px; }
+  .example-assumptions { justify-content: flex-start; }
+  .example-assumptions span { flex: 1 1 84px; }
 }
